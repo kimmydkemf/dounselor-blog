@@ -1,50 +1,60 @@
 import Link from "next/link";
+import { headers } from "next/headers";
 import { categoryService } from "@/services/categoryService";
 import { postService } from "@/services/postService";
 
 export const dynamic = "force-dynamic";
 
 export default function BlogIndex({ searchParams }) {
+  const isOwner = headers().get("x-is-owner") === "1";
   const activeSlug = searchParams?.cat || null;
   const categories = categoryService.list();
   const posts = postService.list({
     status: "published",
     category_slug: activeSlug,
-    limit: 50,
+    limit: 100,
   });
+  const totalCount = postService.list({ status: "published", limit: 10000 }).length;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-        <h1 className="text-2xl font-bold">📝 블로그</h1>
-        <div className="flex gap-2">
-          <Link href="/blog/categories"
-            className="text-sm px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-gray-700 hover:bg-gray-50">
-            카테고리 관리
-          </Link>
-          <Link href="/blog/new"
-            className="text-sm px-3 py-1.5 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 font-medium">
-            + 새 글
-          </Link>
+    <div className="max-w-3xl mx-auto px-6 py-12 md:py-16">
+      {/* 헤더 */}
+      <div className="mb-10">
+        <p className="text-xs font-semibold tracking-[0.25em] uppercase text-indigo-600 mb-3">Blog</p>
+        <div className="flex items-end justify-between flex-wrap gap-3">
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-slate-900">기록의 정원</h1>
+          {isOwner && (
+            <div className="flex gap-2">
+              <Link href="/blog/categories"
+                className="text-sm px-3 py-1.5 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors">
+                카테고리 관리
+              </Link>
+              <Link href="/blog/new"
+                className="text-sm px-4 py-2 rounded-lg bg-slate-900 text-white hover:bg-slate-700 font-medium transition-colors">
+                + 새 글
+              </Link>
+            </div>
+          )}
         </div>
+        <p className="mt-3 text-base text-slate-500">개발과 일상의 단상들을 모은 곳.</p>
       </div>
 
       {/* 카테고리 필터 */}
-      <div className="flex flex-wrap gap-1.5 mb-6">
+      <div className="flex flex-wrap gap-1.5 mb-8 pb-6 border-b border-slate-100">
         <Link href="/blog"
           className={`text-sm px-3 py-1.5 rounded-full transition-colors ${
             !activeSlug
-              ? "bg-indigo-600 text-white"
-              : "bg-white border border-gray-200 text-gray-600 hover:bg-gray-50"
+              ? "bg-slate-900 text-white"
+              : "text-slate-600 hover:bg-slate-100"
           }`}>
-          전체 ({postService.list({ status: "published", limit: 1000 }).length})
+          전체 {totalCount}
         </Link>
         {categories.map(c => (
           <Link key={c.id} href={`/blog?cat=${c.slug}`}
             className={`text-sm px-3 py-1.5 rounded-full transition-colors ${
               activeSlug === c.slug
-                ? "bg-indigo-600 text-white"
-                : "bg-white border border-gray-200 text-gray-600 hover:bg-gray-50"
+                ? "bg-slate-900 text-white"
+                : "text-slate-600 hover:bg-slate-100"
             }`}>
             {c.icon && <span className="mr-1">{c.icon}</span>}
             {c.name}
@@ -53,26 +63,45 @@ export default function BlogIndex({ searchParams }) {
       </div>
 
       {posts.length === 0 ? (
-        <div className="text-center py-16 text-gray-400">
-          <p className="mb-2">아직 글이 없습니다.</p>
-          <Link href="/blog/new" className="text-indigo-600 hover:underline text-sm">+ 첫 글 작성하기</Link>
+        <div className="text-center py-20">
+          <div className="text-5xl mb-3 opacity-30">✍️</div>
+          <p className="text-slate-500 text-sm mb-4">아직 글이 없습니다.</p>
+          {isOwner && (
+            <Link href="/blog/new"
+              className="inline-block text-sm font-medium text-indigo-600 hover:text-indigo-800">
+              + 첫 글 작성하기
+            </Link>
+          )}
         </div>
       ) : (
-        <ul className="space-y-3">
+        <ul className="space-y-4">
           {posts.map(p => (
-            <li key={p.id} className="bg-white border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow">
-              <Link href={`/blog/${p.slug}`} className="block">
-                <div className="flex items-center gap-2 text-xs text-gray-500 mb-1.5">
-                  {p.category_name && (
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700 font-medium">
-                      {p.category_icon && <span>{p.category_icon}</span>}
-                      {p.category_name}
-                    </span>
+            <li key={p.id}>
+              <Link href={`/blog/${p.slug}`}
+                className="block bg-white border border-slate-200 rounded-2xl p-6 card-lift group">
+                {p.category_name && (
+                  <div className="text-xs font-semibold tracking-wide text-indigo-600 mb-2 uppercase">
+                    {p.category_icon} {p.category_name}
+                  </div>
+                )}
+                <h2 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-indigo-700 transition-colors">
+                  {p.title}
+                </h2>
+                {p.excerpt && (
+                  <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed">
+                    {p.excerpt}
+                  </p>
+                )}
+                <div className="mt-4 flex items-center justify-between text-xs text-slate-400">
+                  <span>{p.published_at ? new Date(p.published_at).toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric" }) : "—"}</span>
+                  {p.tags && (
+                    <div className="flex gap-1">
+                      {p.tags.split(",").filter(Boolean).slice(0, 3).map(t => (
+                        <span key={t} className="text-slate-400">#{t.trim()}</span>
+                      ))}
+                    </div>
                   )}
-                  <span>{p.published_at ? new Date(p.published_at).toLocaleDateString("ko-KR") : "—"}</span>
                 </div>
-                <h2 className="text-lg font-bold text-gray-900 mb-1">{p.title}</h2>
-                {p.excerpt && <p className="text-sm text-gray-600 line-clamp-2">{p.excerpt}</p>}
               </Link>
             </li>
           ))}
