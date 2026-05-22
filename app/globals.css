@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html { -webkit-text-size-adjust: 100%; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", "Noto Sans KR", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 마크다운 본문 — 간단 prose */
+.prose-doc h1 { font-size: 1.75rem; font-weight: 800; margin: 1.5em 0 0.5em; }
+.prose-doc h2 { font-size: 1.4rem;  font-weight: 700; margin: 1.4em 0 0.4em; }
+.prose-doc h3 { font-size: 1.15rem; font-weight: 700; margin: 1.2em 0 0.3em; }
+.prose-doc p  { margin: 0.8em 0; line-height: 1.75; }
+.prose-doc ul { margin: 0.8em 0; padding-left: 1.4em; list-style: disc; }
+.prose-doc ol { margin: 0.8em 0; padding-left: 1.4em; list-style: decimal; }
+.prose-doc li { margin: 0.3em 0; }
+.prose-doc code { background: rgba(99,102,241,0.08); padding: 1px 6px; border-radius: 4px; font-size: 0.92em; }
+.prose-doc pre { background: #0f172a; color: #e2e8f0; padding: 14px 16px; border-radius: 10px; overflow-x: auto; margin: 1em 0; }
+.prose-doc pre code { background: transparent; padding: 0; color: inherit; }
+.prose-doc blockquote { border-left: 3px solid #6366f1; padding-left: 12px; margin: 1em 0; color: #6b7280; font-style: italic; }
+.prose-doc a { color: #4f46e5; text-decoration: underline; }
+.prose-doc img { max-width: 100%; border-radius: 10px; margin: 0.8em 0; }
