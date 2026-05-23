@@ -5,11 +5,20 @@ import { postService } from "@/services/postService";
 
 export const dynamic = "force-dynamic";
 
-/** 간단한 마크다운 → HTML — 외부 의존성 없이 */
+/** 간단한 마크다운 → HTML — 외부 의존성 없이.
+ *  이미지: ![alt](src) — 일반 링크보다 먼저 처리.
+ *  안전: 입력은 escape 후 토큰을 다시 끼워 넣는 방식이 아니라 순차 치환.
+ *  src 는 http(s)/data: 만 허용.
+ */
 function md2html(md) {
   if (!md) return "";
+  const safeUrl = (u) => /^(https?:|data:image\/)/i.test(u) ? u : "#";
+
   let html = md
     .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    // 이미지 — 링크보다 먼저
+    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g,
+      (_, alt, src) => `<img src="${safeUrl(src)}" alt="${alt}" loading="lazy" />`)
     .replace(/^### (.*$)/gm, "<h3>$1</h3>")
     .replace(/^## (.*$)/gm, "<h2>$1</h2>")
     .replace(/^# (.*$)/gm, "<h1>$1</h1>")
@@ -17,13 +26,15 @@ function md2html(md) {
     .replace(/`([^`]+)`/g, "<code>$1</code>")
     .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
     .replace(/\*([^*]+)\*/g, "<em>$1</em>")
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g,
+      (_, txt, href) => `<a href="${safeUrl(href)}" target="_blank" rel="noopener">${txt}</a>`)
     .replace(/^> (.+)$/gm, "<blockquote>$1</blockquote>")
     .replace(/^[-*+] (.+)$/gm, "<li>$1</li>")
     .replace(/(<li>[\s\S]+?<\/li>)/g, "<ul>$1</ul>")
     .replace(/^---$/gm, "<hr>");
+
   html = html.split(/\n{2,}/).map(p => {
-    if (/^<(h\d|ul|ol|pre|blockquote|hr)/.test(p.trim())) return p;
+    if (/^<(h\d|ul|ol|pre|blockquote|hr|img|p)/.test(p.trim())) return p;
     return `<p>${p.replace(/\n/g, "<br/>")}</p>`;
   }).join("\n");
   return html;
@@ -38,7 +49,9 @@ function readingMinutes(body) {
 export default function PostDetail({ params }) {
   const isOwner = headers().get("x-is-owner") === "1";
   const post = postService.getBySlug(decodeURIComponent(params.slug));
-  if (!post || post.status !== "published") notFound();
+  if (!post) notFound();
+  // 게스트는 published 만, owner 는 draft 도 볼 수 있음
+  if (!isOwner && post.status !== "published") notFound();
 
   return (
     <article className="max-w-2xl mx-auto px-6 py-12 md:py-16">
@@ -55,6 +68,11 @@ export default function PostDetail({ params }) {
         </Link>
       )}
 
+      {post.status === "draft" && (
+        <div className="inline-flex items-center gap-1.5 text-xs font-bold tracking-widest uppercase px-3 py-1 rounded-full bg-amber-100 text-amber-900 mb-3">
+          ✎ 초안 — 나만 볼 수 있어요
+        </div>
+      )}
       <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-slate-900 leading-tight mb-5">
         {post.title}
       </h1>

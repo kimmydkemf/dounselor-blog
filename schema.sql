@@ -12,16 +12,30 @@ CREATE TABLE IF NOT EXISTS users (
   created_at       DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- 블로그 카테고리 (사용자가 추가)
+-- 블로그 카테고리 (사용자가 추가) — parent_id 로 계층 지원
 CREATE TABLE IF NOT EXISTS categories (
   id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  parent_id   INTEGER REFERENCES categories(id) ON DELETE SET NULL,
   slug        TEXT UNIQUE NOT NULL,
   name        TEXT NOT NULL,
   description TEXT DEFAULT '',
   icon        TEXT DEFAULT '',         -- emoji
+  color       TEXT DEFAULT '',         -- 카드 강조 색상 (hex)
   sort_order  INTEGER DEFAULT 0,
   created_at  DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+-- 방문 로그 (일 단위 unique by ip_hash)
+CREATE TABLE IF NOT EXISTS visits (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  ip_hash    TEXT NOT NULL,
+  day        TEXT NOT NULL,   -- YYYY-MM-DD (Seoul)
+  path       TEXT DEFAULT '',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(ip_hash, day)
+);
+
+CREATE INDEX IF NOT EXISTS idx_visits_day ON visits(day);
 
 -- 블로그 글
 CREATE TABLE IF NOT EXISTS posts (
@@ -113,9 +127,15 @@ CREATE TABLE IF NOT EXISTS board_cards (
 
 CREATE INDEX IF NOT EXISTS idx_board_cards_list ON board_cards(list_id, sort_order);
 
--- 시드: 기본 카테고리
-INSERT OR IGNORE INTO categories (id, slug, name, icon, sort_order)
-VALUES
-  (1, 'dev-log', '개발일지',  '👨‍💻', 0),
-  (2, 'thought', '단상',      '💭', 10),
-  (3, 'review',  '리뷰',      '📝', 20);
+-- 시드: 기본 카테고리 + 개발일지 하위
+INSERT OR IGNORE INTO categories (id, slug, name, icon, color, sort_order) VALUES
+  (1, 'dev-log',     '개발일지',      '👨‍💻', '#6366f1', 0),
+  (2, 'thought',     '단상',          '💭',  '#ec4899', 40),
+  (3, 'review',      '리뷰',          '📝',  '#f59e0b', 50),
+  (4, 'carnivore',   '카니보어 식단', '🥩',  '#dc2626', 30);
+
+-- 개발일지 하위
+INSERT OR IGNORE INTO categories (id, parent_id, slug, name, icon, sort_order) VALUES
+  (10, 1, 'cs-study',     '컴퓨터 공부',     '💻', 1),
+  (11, 1, 'claude-usage', '클로드 사용법',   '🤖', 2),
+  (12, 1, 'dev-tools',    '개발 도구',       '🛠️', 3);

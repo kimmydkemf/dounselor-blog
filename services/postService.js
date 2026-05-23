@@ -5,15 +5,29 @@ import { writePostToObsidian } from "@/lib/obsidianWriter";
 export const postService = {
   list({ status = "published", category_slug, limit = 50, offset = 0 } = {}) {
     let sql = `
-      SELECT p.*, c.slug AS category_slug, c.name AS category_name, c.icon AS category_icon
+      SELECT p.*, c.slug AS category_slug, c.name AS category_name, c.icon AS category_icon, c.color AS category_color
       FROM posts p LEFT JOIN categories c ON p.category_id = c.id
       WHERE 1=1
     `;
     const params = [];
-    if (status) { sql += " AND p.status = ?"; params.push(status); }
+    // status: 'published' | 'draft' | 'all' | null(=published)
+    if (status === "all") {
+      // 모든 상태
+    } else if (status) {
+      sql += " AND p.status = ?";
+      params.push(status);
+    }
     if (category_slug) {
-      sql += " AND c.slug = ?";
-      params.push(category_slug);
+      // 부모 카테고리 선택 시 자식 카테고리 글까지 포함
+      const cat = db.prepare("SELECT id FROM categories WHERE slug=?").get(category_slug);
+      if (cat) {
+        const childIds = db.prepare("SELECT id FROM categories WHERE parent_id=?").all(cat.id).map(r => r.id);
+        const ids = [cat.id, ...childIds];
+        sql += ` AND p.category_id IN (${ids.map(() => "?").join(",")})`;
+        params.push(...ids);
+      } else {
+        sql += " AND 1=0"; // 없는 slug → 0건
+      }
     }
     sql += " ORDER BY COALESCE(p.published_at, p.created_at) DESC LIMIT ? OFFSET ?";
     params.push(limit, offset);
