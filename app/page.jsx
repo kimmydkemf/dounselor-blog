@@ -22,31 +22,50 @@ export default function HomePage() {
 
   return (
     <div>
-      {/* ────────────── HERO — 풀-블리드, 어두운 베이스 + 메쉬 ────────────── */}
+      {/* ────────────── HERO — 상업급, 큰 임팩트 + 컬러풀 메쉬 ────────────── */}
       <section className="relative full-bleed overflow-hidden">
         <div className="absolute inset-0 -z-20"
-          style={{ background: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #831843 100%)" }} />
+          style={{ background: "linear-gradient(135deg, #0b1027 0%, #1e1b4b 40%, #4c1d95 75%, #831843 100%)" }} />
         <div className="absolute inset-0 -z-10 bg-pattern-mesh opacity-90" />
         <div className="absolute inset-0 -z-10 bg-pattern-dots opacity-40" />
+        {/* 추가 컬러풀 블롭 — 시각적 깊이 */}
+        <div className="absolute -top-32 -left-32 w-[40rem] h-[40rem] rounded-full blur-[120px] -z-10"
+          style={{ background: "radial-gradient(circle, #6366f1 0%, transparent 60%)", opacity: 0.5 }} />
+        <div className="absolute -bottom-40 -right-40 w-[44rem] h-[44rem] rounded-full blur-[140px] -z-10"
+          style={{ background: "radial-gradient(circle, #ec4899 0%, transparent 60%)", opacity: 0.45 }} />
 
         <div className="relative max-w-5xl mx-auto px-6 py-32 md:py-44 text-center">
-          <p className="text-xs font-semibold tracking-[0.3em] uppercase text-indigo-300 mb-6 appear appear-1">
-            Personal Space · Since 2026
-          </p>
-          <h1 className="text-5xl md:text-8xl font-bold tracking-tight text-white leading-[0.98] appear appear-2">
+          {/* 상단 배지 — "라이브" 신호 */}
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur border border-white/15 mb-8 appear appear-1">
+            <span className="relative inline-flex w-2 h-2">
+              <span className="absolute inset-0 rounded-full bg-emerald-400 live-dot" />
+              <span className="absolute inset-0 rounded-full bg-emerald-400 opacity-50" />
+            </span>
+            <span className="text-[11px] font-semibold tracking-wider uppercase text-white/90">
+              Personal Space · Since 2026
+            </span>
+          </div>
+
+          <h1 className="text-5xl md:text-[5.5rem] font-bold tracking-tight text-white leading-[0.98] appear appear-2">
             기록은 곧
             <br />
-            <span className="bg-gradient-to-r from-indigo-300 via-pink-300 to-amber-300 bg-clip-text text-transparent">
-              나를 만든다.
+            <span className="relative inline-block">
+              <span className="bg-gradient-to-r from-indigo-300 via-fuchsia-300 to-amber-300 bg-clip-text text-transparent">
+                나를 만든다.
+              </span>
+              {/* underline glow */}
+              <span className="absolute -bottom-2 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
             </span>
           </h1>
           <p className="mt-8 text-lg md:text-2xl text-white/70 max-w-2xl mx-auto leading-relaxed appear appear-3">
             글로 정리하고, 사진으로 남기고, 함께 일하는 작은 공간.
           </p>
-          <div className="mt-12 flex items-center justify-center gap-3 appear appear-4">
+
+          <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-3 appear appear-4">
             <Link href="/blog"
-              className="px-7 py-3.5 rounded-full bg-white text-slate-900 text-sm font-semibold hover:bg-white/90 transition-colors shadow-2xl shadow-indigo-900/40">
-              블로그 둘러보기 →
+              className="group px-7 py-3.5 rounded-full bg-white text-slate-900 text-sm font-semibold hover:bg-white/95 transition-all shadow-2xl shadow-indigo-900/40 hover:shadow-indigo-700/60 hover:-translate-y-0.5 inline-flex items-center gap-2">
+              블로그 둘러보기
+              <span className="group-hover:translate-x-1 transition-transform">→</span>
             </Link>
             <Link href="#topics"
               className="px-7 py-3.5 rounded-full bg-white/10 backdrop-blur border border-white/20 text-white text-sm font-semibold hover:bg-white/20 transition-colors">
@@ -54,16 +73,48 @@ export default function HomePage() {
             </Link>
           </div>
 
-          {/* 큰 통계 */}
-          <div className="mt-20 flex items-center justify-center gap-10 md:gap-16 appear appear-4">
-            <BigStat n={postTotal} label="발행글" />
-            <Divider />
-            <BigStat n={catCount}  label="카테고리" />
-            <Divider />
-            <BigStat n={stats.today} label="오늘 방문" />
-            <Divider />
-            <BigStat n={stats.total} label="총 방문" />
+          {/* 큰 통계 — 더 정교한 카드 형식 */}
+          <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 max-w-3xl mx-auto appear appear-4">
+            <StatTile n={postTotal}   label="발행글"     accent="from-indigo-400 to-violet-400" />
+            <StatTile n={catCount}    label="카테고리"   accent="from-fuchsia-400 to-pink-400" />
+            <StatTile n={stats.today} label="오늘 방문"  accent="from-amber-300 to-orange-400" />
+            <StatTile n={stats.total} label="총 방문"    accent="from-emerald-300 to-teal-400" />
           </div>
+        </div>
+
+        {/* 하단 페이드 — section 전환 부드럽게 */}
+        <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-b from-transparent to-white pointer-events-none" />
+      </section>
+
+      {/* ────────────── 가치 제안 (Features) — Linear 식 3컬럼 ────────────── */}
+      <section className="max-w-6xl mx-auto px-6 py-24 md:py-32">
+        <div className="text-center mb-14">
+          <p className="text-xs font-semibold tracking-[0.3em] uppercase text-indigo-600 mb-3">Why Dounselor</p>
+          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-slate-900 max-w-2xl mx-auto leading-tight">
+            기록은 흩어지면 사라지고,
+            <br />
+            모이면 자산이 됩니다.
+          </h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <FeatureCard
+            icon="✍️"
+            title="AI 가 다듬는 글쓰기"
+            desc="한 줄 메모만 적어두면 AI 가 톤·구조·제목·태그까지 자동으로 다듬어줍니다."
+            tone="indigo"
+          />
+          <FeatureCard
+            icon="📷"
+            title="추억은 그대로"
+            desc="여행·일상의 사진과 영상을 한 권의 앨범처럼. 초대된 사람만 볼 수 있는 비공개 모드."
+            tone="rose"
+          />
+          <FeatureCard
+            icon="🗂"
+            title="함께 일하는 보드"
+            desc="Trello 식 칸반 + 라벨/체크리스트/댓글/파일. 실시간 동기화로 같이 일하기 좋은 협업 공간."
+            tone="emerald"
+          />
         </div>
       </section>
 
@@ -134,15 +185,41 @@ export default function HomePage() {
   );
 }
 
-function BigStat({ n, label }) {
+/** Hero 통계 타일 — 컬러풀 액센트 + 글래스 */
+function StatTile({ n, label, accent }) {
   return (
-    <div className="text-center">
-      <div className="text-3xl md:text-5xl font-bold text-white tabular">{Number(n).toLocaleString()}</div>
-      <div className="text-[10px] tracking-[0.25em] uppercase mt-1.5 text-white/50">{label}</div>
+    <div className="relative rounded-2xl bg-white/[0.06] backdrop-blur-md border border-white/10 px-4 py-5 overflow-hidden">
+      {/* 액센트 라인 */}
+      <div className={`absolute top-0 left-4 right-4 h-px bg-gradient-to-r ${accent}`} />
+      <div className={`text-3xl md:text-4xl font-bold tabular bg-gradient-to-br ${accent} bg-clip-text text-transparent`}>
+        {Number(n).toLocaleString()}
+      </div>
+      <div className="text-[10px] tracking-[0.25em] uppercase mt-1.5 text-white/60">{label}</div>
     </div>
   );
 }
-function Divider() { return <div className="w-px h-12 bg-white/15" />; }
+
+/** Features 카드 — Linear 식 */
+function FeatureCard({ icon, title, desc, tone }) {
+  const tones = {
+    indigo:  { bg: "from-indigo-50 via-white to-violet-50", border: "border-indigo-100", icon: "from-indigo-500 to-violet-600", text: "text-indigo-700" },
+    rose:    { bg: "from-rose-50 via-white to-pink-50",     border: "border-rose-100",   icon: "from-rose-500 to-pink-600",     text: "text-rose-700" },
+    emerald: { bg: "from-emerald-50 via-white to-teal-50",  border: "border-emerald-100", icon: "from-emerald-500 to-teal-600",  text: "text-emerald-700" },
+  };
+  const t = tones[tone] || tones.indigo;
+  return (
+    <div className={`group relative rounded-3xl p-7 border ${t.border} bg-gradient-to-br ${t.bg} shadow-elevated transition-all hover:-translate-y-1 overflow-hidden`}>
+      {/* 데코 블롭 */}
+      <div className={`absolute -top-8 -right-8 w-32 h-32 rounded-full bg-gradient-to-br ${t.icon} opacity-10 blur-2xl group-hover:opacity-20 transition-opacity`} />
+
+      <div className={`relative w-12 h-12 rounded-2xl bg-gradient-to-br ${t.icon} flex items-center justify-center text-2xl shadow-lg mb-5`}>
+        {icon}
+      </div>
+      <h3 className="text-lg font-bold text-slate-900 tracking-tight mb-2">{title}</h3>
+      <p className="text-sm text-slate-600 leading-relaxed">{desc}</p>
+    </div>
+  );
+}
 
 /** Apple-style 컬러 카드 — SVG 비주얼 (사진 X) + 그라데이션 + 자식 칩 */
 function TopicCard({ cat, large }) {

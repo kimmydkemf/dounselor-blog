@@ -1,0 +1,23 @@
+{
+  "name": "Dounselor — 기록의 정원",
+  "short_name": "Dounselor",
+  "description": "글 · 추억 · 보드 — 개인 기록 + 협업 공간",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f172a",
+  "theme_color": "#4f46e5",
+  "lang": "ko",
+  "categories": ["productivity", "lifestyle"],
+  "icons": [
+    { "src": "/icon-192.png",          "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png",          "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icon.svg",              "sizes": "any",     "type": "image/svg+xml", "purpose": "any" }
+  ],
+  "shortcuts": [
+    { "name": "블로그",   "url": "/blog",  "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }] },
+    { "name": "보드",     "url": "/board", "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }] }
+  ]
+}

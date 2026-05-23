@@ -204,6 +204,132 @@ body {
 /* ── 카테고리 chip 부드러운 transition ────────────────── */
 .chip-tx { transition: background-color 0.18s, color 0.18s, box-shadow 0.18s; }
 
+/* ───────────────────────────────────────────────────────
+ * 상업급 디자인 토큰 + 마이크로 인터랙션
+ * Linear / Vercel / Stripe 디자인 트렌드 참고
+ * ─────────────────────────────────────────────────────── */
+
+/* ── 슬라이드업 (toast / install prompt) ── */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-up { animation: slideUp 0.4s cubic-bezier(.2,.7,.3,1) both; }
+
+/* ── 부드러운 펄스 — 라이브 상태 점 ── */
+@keyframes softPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.6; transform: scale(1.2); }
+}
+.live-dot { animation: softPulse 2.4s ease-in-out infinite; }
+
+/* ── 컬러풀 글로우 boundary — 브랜드 카드 강조 ── */
+.glow-border {
+  position: relative;
+}
+.glow-border::before {
+  content: ""; position: absolute; inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, #6366f1, #ec4899, #f59e0b);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0; transition: opacity 0.3s;
+}
+.glow-border:hover::before { opacity: 1; }
+
+/* ── 셰이크 ── */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25%      { transform: translateX(-4px); }
+  75%      { transform: translateX(4px); }
+}
+.animate-shake { animation: shake 0.35s ease-in-out; }
+
+/* ── 마퀴 / 슬라이드 — 자동 스크롤 텍스트 (필요시) ── */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.animate-marquee { animation: marquee 30s linear infinite; }
+
+/* ── elevated 카드 — 다층 그림자 ── */
+.shadow-elevated {
+  box-shadow:
+    0 1px 2px rgba(15,23,42,0.04),
+    0 4px 12px rgba(15,23,42,0.06),
+    0 20px 40px -20px rgba(99,102,241,0.10);
+}
+.shadow-elevated:hover {
+  box-shadow:
+    0 1px 2px rgba(15,23,42,0.04),
+    0 8px 24px rgba(15,23,42,0.08),
+    0 30px 60px -20px rgba(99,102,241,0.16);
+}
+
+/* ── 메쉬 그라데이션 (홈 hero 등) — 다층 ── */
+.mesh-hero {
+  background:
+    radial-gradient(at 20% 15%, rgba(99,102,241,0.18) 0px, transparent 50%),
+    radial-gradient(at 85% 20%, rgba(236,72,153,0.16) 0px, transparent 50%),
+    radial-gradient(at 50% 85%, rgba(251,191,36,0.10) 0px, transparent 50%),
+    radial-gradient(at 0% 80%, rgba(110,231,183,0.10) 0px, transparent 50%);
+}
+
+/* ── 글래스 카드 ── */
+.glass {
+  background: rgba(255,255,255,0.65);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255,255,255,0.6);
+}
+
+/* ── 컬러풀 chip — 폴리시된 배지 ── */
+.chip-grad {
+  background: linear-gradient(135deg, #eef2ff 0%, #fce7f3 100%);
+  color: #4338ca;
+  border: 1px solid rgba(99,102,241,0.18);
+  font-weight: 600;
+}
+
+/* ── 버튼 primary — 상업급 ── */
+.btn-primary {
+  position: relative;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.875rem;
+  box-shadow: 0 4px 14px rgba(79,70,229,0.35), 0 1px 2px rgba(0,0,0,0.06);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(79,70,229,0.45), 0 1px 2px rgba(0,0,0,0.08); }
+.btn-primary:active { transform: translateY(0); }
+
+/* ── 버튼 ghost ── */
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  background: rgba(255,255,255,0.7);
+  color: #334155;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border: 1px solid rgba(15,23,42,0.08);
+  backdrop-filter: blur(12px);
+  transition: background 0.2s, border-color 0.2s;
+}
+.btn-ghost:hover { background: #fff; border-color: rgba(15,23,42,0.16); }
+
+/* ── 스크롤바 (Webkit) — 미니멀 ── */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: rgba(15,23,42,0.15); border-radius: 999px; border: 2px solid transparent; background-clip: padding-box; }
+::-webkit-scrollbar-thumb:hover { background: rgba(15,23,42,0.30); background-clip: padding-box; border: 2px solid transparent; }
+::-webkit-scrollbar-track { background: transparent; }
+
 /* ── 미디어쿼리 — 본문 모바일 ──────────────────────────── */
 @media (max-width: 640px) {
   .prose-doc { font-size: 1rem; line-height: 1.72; }
