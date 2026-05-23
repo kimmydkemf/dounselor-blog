@@ -1,21 +1,50 @@
 # Dounselor Blog
 
-**[blog.dounselor.com](https://blog.dounselor.com)** — 3개 섹션으로 구성된 통합 사이트:
+**[blog.dounselor.com](https://blog.dounselor.com)** — 개인 기록 + 협업이 한 곳에 있는 통합 사이트. PWA 로 폰에서도 앱처럼 사용 가능.
 
 | 섹션 | 경로 | 인증 | 상태 |
 |---|---|---|---|
-| 📝 **블로그** + 개발일지 | `/blog` | 공개 | ✅ Phase 1 |
-| 📋 **공유 보드** (Trello 풍) | `/board` | 카카오 로그인 | ⏳ Phase 2 |
-| 📷 **추억집** (사진·영상) | `/memories` | 카카오 로그인 + 초대제 | ⏳ Phase 3 |
+| 📝 **블로그** + 개발일지 | `/blog` | 공개 | ✅ |
+| 📋 **공유 보드** (Trello 풍) | `/board` | 소유자 + 카카오 게스트 초대 | ✅ |
+| 📷 **추억집** (사진·영상) | `/memories` | 카카오 로그인 + 초대제 | 🚧 |
 
 ---
 
-## 핵심 기능 (Phase 1)
+## 핵심 기능
 
-- **AI 글쓰기 도움** — 거친 초안을 로컬 Ollama LLM 이 3가지 스타일(다듬은 / 캐주얼 / 정돈된)로 다듬어 제안. 사용자가 선택해서 적용.
-- **카테고리 사용자 추가** — `개발일지` / `단상` / `리뷰` 기본 제공, 자유 추가.
-- **Obsidian 단방향 저장** — 발행한 글은 `<OBSIDIAN_VAULT>/블로그/<카테고리>/YYYY-MM-DD 제목.md` 로 마크다운 + frontmatter 저장. LiveSync 가 다른 PC 로 자동 동기화.
-- **공개 블로그** — 누구나 읽기 가능 (글 작성/관리는 로컬 환경에서).
+### ✨ AI 글쓰기 도움
+- 거친 초안 → 로컬 Ollama LLM (qwen2.5:7b) 이 **2단계 정련**: 맞춤법 → 3가지 톤 (정돈/친근/구조화) 동시 제안
+- **제목·요약·태그 자동 추출** (JSON 메타)
+- **한국어 강제** — system 프롬프트 + 한자 leak 가드 + 재시도
+- **리뷰 카테고리** — 본문에서 작품 제목 추출 → Wikipedia 자동 검색 → 포스터·줄거리 본문 상단 prepend
+- **개발일지 자동 작성** — git log (커밋 + 미커밋 staged/unstaged/untracked) 수집 → Ollama 가 일지로 정리
+- 진행률 실시간 표시 (SSE 스트리밍)
+
+### 📚 블로그
+- **카테고리 계층** — 컴퓨터 공부 (개발일지/클로드 사용법/개발 도구), 단상, 리뷰 (영화/드라마/애니), 건강 (카니보어/운동)
+- **Apple-style 풀-블리드 hero** + 카테고리별 SVG 비주얼 (메쉬/도트/그리드/오로라 패턴)
+- **글 수정 페이지** + 초안 owner-only 노출 + 발행 상태 라디오 토글
+- **방문자 카운터** (IP 해시 + 일별 UNIQUE)
+- **Obsidian 단방향 저장** — 발행 시 `<OBSIDIAN_VAULT>/블로그/<카테고리>/YYYY-MM-DD 제목.md`
+
+### 📋 공유 보드 (Trello-style)
+- **칸반** — 리스트/카드 CRUD, native HTML5 드래그앤드롭 (명시적 list drag handle 로 카드 잘못 옮김 방지)
+- **라벨 10색** / **체크리스트 (진행률 바)** / **마감일 칩** (지남/오늘/임박 색 자동)
+- **카드 모달** 좌-우 레이아웃 — 본문 (라벨·마감·설명·체크리스트·첨부·댓글) + 사이드바
+- **파일 첨부** (최대 10MB, 이미지/PDF/MP4)
+- **댓글 + 활동 로그**
+- **게스트 초대** — 6자 코드 + 카카오 로그인 → 게스트 토큰 (90일) → 해당 보드만 접근 (다른 보드 자동 차단)
+- **실시간 동기화** (SSE) — 다른 사용자 변경 자동 반영
+- **8가지 배경 그라데이션 프리셋**
+
+### 🔐 인증
+- **소유자** — 단순 비밀번호 (JWT 쿠키, 30일)
+- **게스트** (보드용) — 카카오 로그인으로만 가입. `/board/join/<코드>` 링크로 초대
+
+### 📱 PWA
+- 홈 화면 설치 가능 — Android Chrome / iOS Safari / 데스크탑 Chrome
+- 오프라인 폴백 페이지
+- next-pwa + Workbox 자동 service worker
 
 ---
 
@@ -23,30 +52,11 @@
 
 - **공개 URL**: `https://blog.dounselor.com`
 - **로컬**: `http://localhost:3100`
-- **터널**: Cloudflare Named Tunnel (`dounselor.com` 의 기존 named tunnel 에 ingress 추가)
+- **터널**: Cloudflare Named Tunnel
 - **저장소**:
-  - 메타데이터: SQLite (`data/blog.db`, gitignored)
-  - 본문 마크다운: `D:\Obsidian\MyNotes\블로그\` 단방향 sync
-  - 미디어 (Phase 3): TBD
-
-### Cloudflare Tunnel 추가
-
-`C:\ProgramData\Cloudflare\cloudflared\config.yml` 에 `ingress` 한 줄 추가:
-
-```yaml
-ingress:
-  - hostname: blog.dounselor.com
-    service: http://localhost:3100
-  # ... 기존 life / pacer 항목 ...
-  - service: http_status:404
-```
-
-그리고:
-
-```powershell
-cloudflared tunnel route dns dounselor blog.dounselor.com
-Restart-Service Cloudflared
-```
+  - 메타: SQLite (`data/blog.db`, gitignored)
+  - 본문: Obsidian vault 로 단방향 저장
+  - 보드 첨부: `data/board-uploads/`
 
 ---
 
@@ -54,69 +64,60 @@ Restart-Service Cloudflared
 
 ```powershell
 cd C:\dounselor-blog
-
-# 의존성 설치
 npm install
-
-# 빌드 + 시작
-.\start.bat
-
-# 또는 개발 모드
-npm run dev
+npm run build
+npm start             # port 3100
 ```
 
-`.env.local` 필요 키:
+### `.env.local` 키
 
 | 키 | 의미 |
 |---|---|
-| `OBSIDIAN_VAULT` | Obsidian 볼트 경로 (예: `D:\Obsidian\MyNotes`) |
+| `OBSIDIAN_VAULT` | Obsidian 볼트 경로 |
 | `OLLAMA_URL` | Ollama API endpoint (기본 `http://localhost:11434`) |
-| `OLLAMA_MODEL` | 사용 모델 (기본 `llama3.2:3b`, 권장 `qwen2.5:7b` — 한국어 더 자연스러움) |
-| `JWT_SECRET` | Phase 2/3 카카오 로그인 세션 서명용 |
-
-### Ollama 한국어 품질 업그레이드 (선택)
-
-```powershell
-ollama pull qwen2.5:7b
-# .env.local 의 OLLAMA_MODEL=qwen2.5:7b 로 변경
-```
+| `OLLAMA_MODEL` | 모델 (권장 `qwen2.5:7b` — 한국어 자연스러움) |
+| `JWT_SECRET` | 세션 서명 |
+| `OWNER_PASSWORD` | 소유자 로그인 비밀번호 |
+| `KAKAO_REST_API_KEY` | 카카오 OAuth (게스트 초대용) |
+| `KAKAO_REDIRECT_URI` | `https://blog.dounselor.com/api/auth/kakao/callback` |
 
 ---
 
 ## 기술 스택
 
-- **Frontend**: Next.js 14 (App Router) · React 18 · Tailwind CSS
-- **Backend**: Next.js API Routes · better-sqlite3
-- **AI**: 로컬 Ollama (키·비용 0)
-- **Obsidian sync**: 마크다운 파일 단방향 작성 + LiveSync (CouchDB) 가 다른 PC 동기화
-- **Auth (Phase 2+)**: Kakao Login OAuth
-- **Hosting**: PC 로컬 (port 3100) + Cloudflare Named Tunnel
+- **Frontend**: Next.js 14 (App Router) · React 18 · Tailwind CSS · next-pwa
+- **Backend**: Next.js API Routes · better-sqlite3 · jose (JWT) · sharp (이미지)
+- **AI**: 로컬 Ollama (qwen2.5:7b 권장, 키·비용 0)
+- **Auth**: 자체 JWT (소유자) + Kakao OAuth (게스트)
+- **Realtime**: SSE (Server-Sent Events) + in-memory pub/sub
+- **Hosting**: PC 로컬 + Cloudflare Named Tunnel
 
 ---
 
-## Phase 별 상태
+## 디자인 시스템
 
-### Phase 1 — 블로그 (현재) ✅
+- **Linear / Vercel / Stripe** 식 상업급 폴리시
+- **컬러** — Indigo (브랜드) + Pink/Amber/Emerald 액센트
+- **타이포** — 시스템 폰트 (Pretendard / SF Pro / Noto Sans KR)
+- **컴포넌트** — `btn-primary`, `btn-ghost`, `glass`, `shadow-elevated`, `chip-grad`
+- **모션** — fade-in / slide-up / hover lift / soft pulse (live indicator)
+- **다층 메쉬 그라데이션** + 컬러 블롭 깊이감
 
-- [x] 카테고리 (CRUD + 시드)
-- [x] 글 (목록, 상세, 작성)
-- [x] AI 글쓰기 다듬기 (Ollama 3-style)
-- [x] Obsidian 단방향 저장
-- [ ] 수정 페이지
-- [ ] 검색
-- [ ] 인덱스 RSS
+---
 
-### Phase 2 — 공유 보드
+## 기능 로드맵
 
-- [ ] Trello 풍 Kanban (board / list / card)
-- [ ] 드래그 앤 드롭
-- [ ] 카카오 로그인
-- [ ] 협업자 초대
-- [ ] 일별 상태 스냅샷 → Obsidian
-
-### Phase 3 — 추억집
-
-- [ ] 사진·영상 업로드
-- [ ] 모바일 청첩장 스타일 갤러리
-- [ ] 초대 링크 + 카카오 인증
-- [ ] 미디어 스토리지 (R2 또는 로컬)
+- [x] 블로그 + AI 글쓰기 + Obsidian sync
+- [x] 카테고리 계층화
+- [x] 글 수정 + 초안 관리
+- [x] 자동 개발일지 (git log 기반)
+- [x] 방문자 카운터
+- [x] 보드 (칸반 + 라벨/체크리스트/첨부/댓글)
+- [x] 보드 게스트 초대 (카카오)
+- [x] SSE 실시간 동기화
+- [x] PWA 설치
+- [x] 카카오 OAuth 통합
+- [ ] 추억집 (사진·영상 앨범)
+- [ ] 검색 / RSS
+- [ ] 다크 모드
+- [ ] 블로그 상세 페이지 사이드바 (목차 + 관련 글)
