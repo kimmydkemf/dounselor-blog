@@ -36,7 +36,7 @@ export default function HomePage() {
 
         <div className="relative max-w-5xl mx-auto px-6 py-32 md:py-44 text-center">
           {/* 상단 배지 — "라이브" 신호 */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur border border-white/15 mb-8 appear appear-1">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white dark:bg-slate-900/10 backdrop-blur border border-white/15 mb-8 appear appear-1">
             <span className="relative inline-flex w-2 h-2">
               <span className="absolute inset-0 rounded-full bg-emerald-400 live-dot" />
               <span className="absolute inset-0 rounded-full bg-emerald-400 opacity-50" />
@@ -63,12 +63,12 @@ export default function HomePage() {
 
           <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-3 appear appear-4">
             <Link href="/blog"
-              className="group px-7 py-3.5 rounded-full bg-white text-slate-900 text-sm font-semibold hover:bg-white/95 transition-all shadow-2xl shadow-indigo-900/40 hover:shadow-indigo-700/60 hover:-translate-y-0.5 inline-flex items-center gap-2">
+              className="group px-7 py-3.5 rounded-full bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm font-semibold hover:bg-white dark:bg-slate-900/95 transition-all shadow-2xl shadow-indigo-900/40 hover:shadow-indigo-700/60 hover:-translate-y-0.5 inline-flex items-center gap-2">
               블로그 둘러보기
               <span className="group-hover:translate-x-1 transition-transform">→</span>
             </Link>
             <Link href="#topics"
-              className="px-7 py-3.5 rounded-full bg-white/10 backdrop-blur border border-white/20 text-white text-sm font-semibold hover:bg-white/20 transition-colors">
+              className="px-7 py-3.5 rounded-full bg-white dark:bg-slate-900/10 backdrop-blur border border-white/20 text-white text-sm font-semibold hover:bg-white dark:bg-slate-900/20 transition-colors">
               주제 보기
             </Link>
           </div>
@@ -122,10 +122,10 @@ export default function HomePage() {
       <section id="topics" className="max-w-7xl mx-auto px-6 py-24 md:py-32">
         <div className="text-center mb-14">
           <p className="text-xs font-semibold tracking-[0.3em] uppercase text-indigo-600 mb-3">Topics</p>
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-slate-900">
+          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-slate-900 dark:text-white">
             주제별로 둘러보기.
           </h2>
-          <p className="mt-4 text-base md:text-lg text-slate-500 max-w-xl mx-auto">
+          <p className="mt-4 text-base md:text-lg text-slate-500 dark:text-slate-400 dark:text-slate-500 max-w-xl mx-auto">
             관심사마다 결이 다른 공간을 만들었습니다.
           </p>
         </div>
@@ -142,7 +142,7 @@ export default function HomePage() {
         <section className="max-w-6xl mx-auto px-6 py-12">
           <div className="mb-8">
             <p className="text-xs font-semibold tracking-[0.3em] uppercase text-indigo-600 mb-2">Workspace</p>
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">작업 공간</h2>
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">작업 공간</h2>
           </div>
           <OwnerSectionGrid />
         </section>
@@ -161,7 +161,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {recent.slice(0, 6).map(p => (
               <Link key={p.id} href={`/blog/${p.slug}`}
-                className="group block rounded-3xl border border-slate-200 overflow-hidden card-lift bg-white">
+                className="group block rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden card-lift bg-white dark:bg-slate-900">
                 <CategoryCover slug={p.category_slug} aspect="16/10">
                   {p.category_name && (
                     <div className="absolute left-4 bottom-3 text-xs font-semibold tracking-widest uppercase text-white">
@@ -170,11 +170,11 @@ export default function HomePage() {
                   )}
                 </CategoryCover>
                 <div className="p-5">
-                  <h3 className="text-base font-bold text-slate-900 mb-2 line-clamp-2 group-hover:text-indigo-700 transition-colors">
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white mb-2 line-clamp-2 group-hover:text-indigo-700 transition-colors">
                     {p.title}
                   </h3>
-                  {p.excerpt && <p className="text-sm text-slate-500 line-clamp-3 leading-relaxed">{p.excerpt}</p>}
-                  <p className="text-xs text-slate-400 mt-3">{fmtDate(p.published_at)}</p>
+                  {p.excerpt && <p className="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500 line-clamp-3 leading-relaxed">{p.excerpt}</p>}
+                  <p className="text-xs text-slate-400 dark:text-slate-500 mt-3">{fmtDate(p.published_at)}</p>
                 </div>
               </Link>
             ))}
@@ -215,8 +215,8 @@ function FeatureCard({ icon, title, desc, tone }) {
       <div className={`relative w-12 h-12 rounded-2xl bg-gradient-to-br ${t.icon} flex items-center justify-center text-2xl shadow-lg mb-5`}>
         {icon}
       </div>
-      <h3 className="text-lg font-bold text-slate-900 tracking-tight mb-2">{title}</h3>
-      <p className="text-sm text-slate-600 leading-relaxed">{desc}</p>
+      <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight mb-2">{title}</h3>
+      <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{desc}</p>
     </div>
   );
 }
@@ -308,12 +308,12 @@ function OwnerSectionGrid() {
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       {sections.map(s => (
         <Link key={s.href} href={s.href}
-          className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 card-lift">
+          className="group relative overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 card-lift">
           <div className={`absolute -top-12 -right-12 w-32 h-32 rounded-full bg-gradient-to-br ${s.color} opacity-10 group-hover:opacity-20 transition-opacity blur-xl`} />
           <div className="relative">
             <div className="text-3xl mb-3">{s.icon}</div>
-            <h3 className="text-lg font-bold text-slate-900 mb-1.5">{s.title}</h3>
-            <p className="text-sm text-slate-500 leading-relaxed">{s.desc}</p>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1.5">{s.title}</h3>
+            <p className="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500 leading-relaxed">{s.desc}</p>
             <div className="mt-4 text-xs font-medium text-indigo-600 group-hover:text-indigo-800">열기 →</div>
           </div>
         </Link>

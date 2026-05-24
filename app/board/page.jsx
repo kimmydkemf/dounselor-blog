@@ -41,8 +41,8 @@ export default function BoardListPage() {
       <div className="flex items-end justify-between mb-10 flex-wrap gap-3">
         <div>
           <p className="text-xs font-semibold tracking-[0.3em] uppercase text-indigo-600 mb-2">Boards</p>
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900">공유 보드</h1>
-          <p className="mt-2 text-sm text-slate-500">Trello 처럼 — 리스트와 카드로 일·할 일을 관리합니다.</p>
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-white">공유 보드</h1>
+          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500">Trello 처럼 — 리스트와 카드로 일·할 일을 관리합니다.</p>
         </div>
         <button onClick={() => setShowNew(true)}
           className="px-4 py-2 rounded-lg bg-slate-900 text-white text-sm font-semibold hover:bg-slate-700 transition-colors shadow-sm">
@@ -53,11 +53,11 @@ export default function BoardListPage() {
       {err && <p className="text-sm text-red-500 mb-4">⚠ {err}</p>}
 
       {loading ? (
-        <p className="text-center py-20 text-sm text-slate-400">불러오는 중…</p>
+        <p className="text-center py-20 text-sm text-slate-400 dark:text-slate-500">불러오는 중…</p>
       ) : boards.length === 0 ? (
-        <div className="text-center py-24 rounded-3xl border border-dashed border-slate-200 bg-slate-50/40">
+        <div className="text-center py-24 rounded-3xl border border-dashed border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/40">
           <div className="text-5xl mb-3 opacity-30">📋</div>
-          <p className="text-slate-500 text-sm mb-4">아직 보드가 없어요.</p>
+          <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 text-sm mb-4">아직 보드가 없어요.</p>
           <button onClick={() => setShowNew(true)}
             className="text-sm font-medium text-indigo-600 hover:text-indigo-800">
             + 첫 보드 만들기
@@ -89,7 +89,7 @@ function BoardCard({ b, onDelete }) {
   const bgCss = b.background ? getBackgroundCss(b.background)
               : `linear-gradient(135deg, ${color} 0%, ${color}cc 100%)`;
   return (
-    <div className="group relative rounded-2xl border border-slate-200 bg-white card-lift overflow-hidden">
+    <div className="group relative rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 card-lift overflow-hidden">
       <Link href={`/board/${b.id}`} className="block">
         {/* 배경 프리뷰 (Trello 의 보드 카드처럼) */}
         <div className="h-24 relative" style={{ background: bgCss }}>
@@ -99,10 +99,10 @@ function BoardCard({ b, onDelete }) {
           </div>
         </div>
         <div className="p-4">
-          {b.description && <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed mb-2">{b.description}</p>}
-          <div className="flex items-center gap-3 text-[11px] text-slate-500">
-            <span className="inline-flex items-center gap-1">📋 <b className="text-slate-700 tabular">{b.list_count}</b></span>
-            <span className="inline-flex items-center gap-1">🗂 <b className="text-slate-700 tabular">{b.card_count}</b></span>
+          {b.description && <p className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 line-clamp-2 leading-relaxed mb-2">{b.description}</p>}
+          <div className="flex items-center gap-3 text-[11px] text-slate-500 dark:text-slate-400 dark:text-slate-500">
+            <span className="inline-flex items-center gap-1">📋 <b className="text-slate-700 dark:text-slate-200 tabular">{b.list_count}</b></span>
+            <span className="inline-flex items-center gap-1">🗂 <b className="text-slate-700 dark:text-slate-200 tabular">{b.card_count}</b></span>
           </div>
         </div>
       </Link>
@@ -143,24 +143,24 @@ function NewBoardModal({ onClose, onCreated }) {
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4"
       onClick={onClose}>
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6"
+      <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md p-6"
         onClick={e => e.stopPropagation()}>
-        <h2 className="text-lg font-bold text-slate-900 mb-4">새 보드 만들기</h2>
+        <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4">새 보드 만들기</h2>
         <div className="space-y-3">
           <div>
-            <label className="text-xs font-semibold text-slate-600 block mb-1">이름</label>
+            <label className="text-xs font-semibold text-slate-600 dark:text-slate-300 block mb-1">이름</label>
             <input type="text" value={name} onChange={e => setName(e.target.value)}
               onKeyDown={e => e.key === "Enter" && (e.preventDefault(), create())}
               placeholder="예) 2026 1분기 작업" autoFocus
-              className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm" />
+              className="w-full border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm" />
           </div>
           <div>
-            <label className="text-xs font-semibold text-slate-600 block mb-1">설명 (선택)</label>
+            <label className="text-xs font-semibold text-slate-600 dark:text-slate-300 block mb-1">설명 (선택)</label>
             <input type="text" value={desc} onChange={e => setDesc(e.target.value)}
-              className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm" />
+              className="w-full border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm" />
           </div>
           <div>
-            <label className="text-xs font-semibold text-slate-600 block mb-1.5">테마 색</label>
+            <label className="text-xs font-semibold text-slate-600 dark:text-slate-300 block mb-1.5">테마 색</label>
             <div className="flex gap-1.5 flex-wrap">
               {PALETTE.map(c => (
                 <button key={c} type="button" onClick={() => setColor(c)}
@@ -171,7 +171,7 @@ function NewBoardModal({ onClose, onCreated }) {
             </div>
           </div>
           <div>
-            <label className="text-xs font-semibold text-slate-600 block mb-1.5">배경</label>
+            <label className="text-xs font-semibold text-slate-600 dark:text-slate-300 block mb-1.5">배경</label>
             <div className="grid grid-cols-4 gap-1.5">
               {BACKGROUNDS.map(b => (
                 <button key={b.id} type="button" onClick={() => setBg(b.id)}
@@ -184,13 +184,13 @@ function NewBoardModal({ onClose, onCreated }) {
         </div>
         <div className="mt-6 flex justify-end gap-2">
           <button onClick={onClose}
-            className="px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100">취소</button>
+            className="px-4 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 dark:bg-slate-800">취소</button>
           <button onClick={create} disabled={busy || !name.trim()}
             className="px-4 py-2 rounded-lg bg-slate-900 text-white text-sm font-semibold hover:bg-slate-700 disabled:opacity-50">
             {busy ? "만드는 중..." : "만들기"}
           </button>
         </div>
-        <p className="text-[11px] text-slate-400 mt-3">새 보드엔 기본 리스트 3개(할 일 / 진행 중 / 완료)가 같이 만들어져요.</p>
+        <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-3">새 보드엔 기본 리스트 3개(할 일 / 진행 중 / 완료)가 같이 만들어져요.</p>
       </div>
     </div>
   );

@@ -57,16 +57,16 @@ export default function InstallPrompt() {
 
   return (
     <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-6 md:max-w-sm z-40 animate-slide-up">
-      <div className="bg-white border border-slate-200 rounded-2xl shadow-2xl p-4 flex items-start gap-3">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-4 flex items-start gap-3">
         <img src="/icon-192.png" alt="" className="w-10 h-10 rounded-lg flex-shrink-0" />
         <div className="flex-1 min-w-0">
-          <div className="text-sm font-bold text-slate-900">Dounselor 앱 설치</div>
+          <div className="text-sm font-bold text-slate-900 dark:text-white">Dounselor 앱 설치</div>
           {iosHint ? (
-            <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">
-              Safari 의 <span className="inline-block px-1 bg-slate-100 rounded">공유</span> 버튼 → <b>홈 화면에 추가</b>
+            <p className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-0.5 leading-relaxed">
+              Safari 의 <span className="inline-block px-1 bg-slate-100 dark:bg-slate-800 rounded">공유</span> 버튼 → <b>홈 화면에 추가</b>
             </p>
           ) : (
-            <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">
+            <p className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-0.5 leading-relaxed">
               한 번 설치하면 홈 화면에서 바로 — 빠르고 풀스크린.
             </p>
           )}
@@ -79,7 +79,7 @@ export default function InstallPrompt() {
             </button>
           )}
           <button onClick={dismiss}
-            className="px-3 py-1 rounded-lg text-xs text-slate-500 hover:bg-slate-100">
+            className="px-3 py-1 rounded-lg text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 dark:bg-slate-800">
             나중에
           </button>
         </div>

@@ -41,9 +41,9 @@ export default function LoginPage() {
           </div>
         </Link>
 
-        <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-8">
-          <h1 className="text-xl font-bold text-slate-900 mb-1">소유자 로그인</h1>
-          <p className="text-sm text-slate-500 mb-6">방문객은 로그인 없이 블로그만 열람 가능합니다.</p>
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm p-8">
+          <h1 className="text-xl font-bold text-slate-900 dark:text-white mb-1">소유자 로그인</h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500 mb-6">방문객은 로그인 없이 블로그만 열람 가능합니다.</p>
 
           {error && (
             <div className="mb-4 px-3 py-2 bg-red-50 border border-red-100 text-red-600 text-sm rounded-lg">
@@ -53,14 +53,14 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1.5">비밀번호</label>
+              <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1.5">비밀번호</label>
               <input
                 type="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 required
                 autoFocus
-                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm bg-slate-50 focus:bg-white focus:outline-none focus:border-indigo-500 focus:ring-3 focus:ring-indigo-100 transition-all"
+                className="w-full border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-sm bg-slate-50 focus:bg-white dark:bg-slate-900 focus:outline-none focus:border-indigo-500 focus:ring-3 focus:ring-indigo-100 transition-all"
                 placeholder="••••••••"
               />
             </div>
@@ -73,7 +73,7 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <Link href="/blog" className="block text-center mt-6 text-sm text-slate-500 hover:text-slate-700">
+          <Link href="/blog" className="block text-center mt-6 text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 dark:text-slate-200">
             방문객으로 블로그 보기 →
           </Link>
         </div>

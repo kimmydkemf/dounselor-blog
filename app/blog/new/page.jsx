@@ -279,19 +279,19 @@ export default function NewPostPage() {
     <div className="max-w-3xl mx-auto px-6 py-12">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <Link href="/blog" className="text-xs text-slate-500 hover:text-slate-900">← 블로그</Link>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 mt-1">새 글</h1>
+          <Link href="/blog" className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-white dark:text-white">← 블로그</Link>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white mt-1">새 글</h1>
         </div>
       </div>
 
       <div className="space-y-5">
         <input type="text" value={form.title} onChange={set("title")}
           placeholder="제목 (적지 않으면 AI 가 추출해서 채워줍니다)"
-          className="w-full text-3xl font-bold tracking-tight border-b border-slate-200 pb-3 focus:outline-none focus:border-slate-900 bg-transparent placeholder:text-slate-300" />
+          className="w-full text-3xl font-bold tracking-tight border-b border-slate-200 dark:border-slate-800 pb-3 focus:outline-none focus:border-slate-900 dark:focus:border-slate-100 bg-transparent placeholder:text-slate-300 dark:placeholder:text-slate-600" />
 
         <div className="flex gap-2 flex-wrap">
           <select value={form.category_id} onChange={set("category_id")}
-            className="border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white">
+            className="border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm bg-white dark:bg-slate-900">
             <option value="">카테고리 선택</option>
             {categories.map(c => (
               <option key={c.id} value={c.id}>
@@ -301,7 +301,7 @@ export default function NewPostPage() {
           </select>
           <input type="text" value={form.tags} onChange={set("tags")}
             placeholder="태그 (콤마 구분) — 비워두면 AI 가 자동 추가"
-            className="flex-1 min-w-[200px] border border-slate-200 rounded-lg px-3 py-2 text-sm" />
+            className="flex-1 min-w-[200px] border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm" />
         </div>
 
         <textarea value={form.body} onChange={set("body")}
@@ -310,19 +310,19 @@ export default function NewPostPage() {
               ? "여기에 본문을 자유롭게 적으세요. 작품 제목을 적어두면 'AI 다듬기' 시 자동으로 포스터/줄거리를 가져옵니다."
               : "여기에 본문을 자유롭게 적으세요. (마크다운 OK)\n\n다 적으면 'AI 다듬기' 로 본문 정련 + 제목/태그 자동 추출까지 한 번에."
           }
-          className="w-full border border-slate-200 rounded-xl px-4 py-3 text-base bg-white font-mono leading-relaxed focus:outline-none focus:border-slate-900"
+          className="w-full border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 text-base bg-white dark:bg-slate-900 font-mono leading-relaxed focus:outline-none focus:border-slate-900 dark:focus:border-slate-100"
           rows={18} />
 
         <input type="text" value={form.excerpt} onChange={set("excerpt")}
           placeholder="요약 (선택) — 비워두면 AI 가 자동 생성"
-          className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm" />
+          className="w-full border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm" />
 
         {/* AI 다듬기 */}
-        <div className="border-t border-slate-200 pt-6">
+        <div className="border-t border-slate-200 dark:border-slate-800 pt-6">
           <div className="flex items-center justify-between mb-3">
             <div>
-              <h3 className="text-sm font-semibold text-slate-700">✨ AI 다듬기</h3>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-200">✨ AI 다듬기</h3>
+              <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
                 3톤 본문 + 제목·태그 자동 추출{reviewHint ? " + 작품 정보 자동" : ""}
               </p>
             </div>
@@ -335,7 +335,7 @@ export default function NewPostPage() {
           {/* 진행률 */}
           {(aiLoading || progress) && (
             <div className="rounded-2xl border border-indigo-100 bg-indigo-50/50 px-4 py-3 mb-3">
-              <div className="flex items-center justify-between text-xs text-slate-600 mb-2">
+              <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-300 mb-2">
                 <span className="font-semibold text-indigo-700">
                   {aiLoading ? `진행 중 · ${doneCount}/${stageOrder.length} 단계` : `완료 · ${elapsedSec}s`}
                 </span>
@@ -362,7 +362,7 @@ export default function NewPostPage() {
                       <span className={isDone ? "text-slate-500 line-through" : isActive ? "text-slate-900 font-medium" : "text-slate-400"}>
                         {info.name}
                       </span>
-                      <span className="text-slate-400">— {info.note}</span>
+                      <span className="text-slate-400 dark:text-slate-500">— {info.note}</span>
                     </li>
                   );
                 })}
@@ -377,10 +377,10 @@ export default function NewPostPage() {
             <div className="rounded-2xl border border-emerald-200 bg-emerald-50/40 px-4 py-3 mb-3">
               <div className="text-xs font-semibold text-emerald-800 mb-2">📋 AI 가 추출한 메타데이터 — 적용 시 빈 필드에 채워집니다</div>
               <dl className="text-sm space-y-1">
-                <div className="flex gap-2"><dt className="font-semibold text-slate-600 min-w-[3rem]">제목</dt><dd className="text-slate-900">{meta.title || "—"}</dd></div>
-                <div className="flex gap-2"><dt className="font-semibold text-slate-600 min-w-[3rem]">요약</dt><dd className="text-slate-700">{meta.excerpt || "—"}</dd></div>
+                <div className="flex gap-2"><dt className="font-semibold text-slate-600 dark:text-slate-300 min-w-[3rem]">제목</dt><dd className="text-slate-900 dark:text-white">{meta.title || "—"}</dd></div>
+                <div className="flex gap-2"><dt className="font-semibold text-slate-600 dark:text-slate-300 min-w-[3rem]">요약</dt><dd className="text-slate-700 dark:text-slate-200">{meta.excerpt || "—"}</dd></div>
                 <div className="flex gap-2 flex-wrap items-center">
-                  <dt className="font-semibold text-slate-600 min-w-[3rem]">태그</dt>
+                  <dt className="font-semibold text-slate-600 dark:text-slate-300 min-w-[3rem]">태그</dt>
                   <dd className="flex flex-wrap gap-1">
                     {(meta.tags || []).map(t => (
                       <span key={t} className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-900">#{t}</span>
@@ -404,10 +404,10 @@ export default function NewPostPage() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5 mb-1">
                     <span className="text-[10px] font-semibold tracking-wider uppercase text-amber-700">{work.lang}</span>
-                    <span className="font-bold text-sm text-slate-900 truncate">{work.displaytitle}</span>
+                    <span className="font-bold text-sm text-slate-900 dark:text-white truncate">{work.displaytitle}</span>
                   </div>
-                  {work.description && <p className="text-xs text-slate-700 mb-1">{work.description}</p>}
-                  <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed">{work.extract}</p>
+                  {work.description && <p className="text-xs text-slate-700 dark:text-slate-200 mb-1">{work.description}</p>}
+                  <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2 leading-relaxed">{work.extract}</p>
                 </div>
               </div>
             </div>
@@ -416,11 +416,11 @@ export default function NewPostPage() {
           {drafts.length > 0 && (
             <div className="grid grid-cols-1 gap-4 mt-4">
               {drafts.map(d => (
-                <div key={d.id} className="border border-slate-200 rounded-2xl p-5 bg-white">
+                <div key={d.id} className="border border-slate-200 dark:border-slate-800 rounded-2xl p-5 bg-white dark:bg-slate-900">
                   <div className="flex items-center justify-between mb-3">
                     <div>
                       <div className="text-sm font-bold text-indigo-700">{d.label}</div>
-                      <div className="text-xs text-slate-500 mt-0.5">{d.desc}</div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-0.5">{d.desc}</div>
                     </div>
                     <button onClick={() => applyDraft(d)} disabled={!d.content}
                       className="text-xs px-3 py-1.5 rounded-md bg-slate-900 text-white hover:bg-slate-700 font-medium disabled:opacity-40">
@@ -430,7 +430,7 @@ export default function NewPostPage() {
                   {d.error ? (
                     <p className="text-xs text-red-500">실패: {d.error}</p>
                   ) : (
-                    <pre className="text-sm text-slate-700 whitespace-pre-wrap font-mono leading-relaxed max-h-72 overflow-y-auto bg-slate-50 rounded-lg p-3">{d.content || "(빈 응답)"}</pre>
+                    <pre className="text-sm text-slate-700 dark:text-slate-200 whitespace-pre-wrap font-mono leading-relaxed max-h-72 overflow-y-auto bg-slate-50 dark:bg-slate-900 rounded-lg p-3">{d.content || "(빈 응답)"}</pre>
                   )}
                 </div>
               ))}
@@ -448,7 +448,7 @@ export default function NewPostPage() {
                   onChange={e => setWorkQuery(e.target.value)}
                   onKeyDown={e => e.key === "Enter" && (e.preventDefault(), searchWork())}
                   placeholder="작품 제목"
-                  className="flex-1 border border-amber-300 rounded-lg px-3 py-2 text-sm bg-white" />
+                  className="flex-1 border border-amber-300 rounded-lg px-3 py-2 text-sm bg-white dark:bg-slate-900" />
                 <button onClick={searchWork} disabled={workLoading || !workQuery.trim()}
                   className="px-4 py-2 rounded-lg bg-amber-600 text-white text-sm font-semibold hover:bg-amber-700 disabled:opacity-50">
                   {workLoading ? "검색 중..." : "검색"}
@@ -459,7 +459,7 @@ export default function NewPostPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-3">
                   {workResults.map((w, i) => (
                     <button key={i} onClick={() => insertWork(w)}
-                      className="text-left flex gap-3 p-3 rounded-xl border border-amber-200 bg-white hover:border-amber-400 transition-all">
+                      className="text-left flex gap-3 p-3 rounded-xl border border-amber-200 bg-white dark:bg-slate-900 hover:border-amber-400 transition-all">
                       {w.thumbnail ? (
                         <img src={w.thumbnail} alt={w.displaytitle} className="w-16 h-20 object-cover rounded-md flex-shrink-0 bg-amber-100" />
                       ) : (
@@ -468,10 +468,10 @@ export default function NewPostPage() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-1.5 mb-1">
                           <span className="text-[10px] font-semibold tracking-wider uppercase text-amber-700">{w.lang}</span>
-                          <span className="font-bold text-sm text-slate-900 truncate">{w.displaytitle}</span>
+                          <span className="font-bold text-sm text-slate-900 dark:text-white truncate">{w.displaytitle}</span>
                         </div>
-                        {w.description && <p className="text-xs text-slate-600 mb-1">{w.description}</p>}
-                        <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">{w.extract}</p>
+                        {w.description && <p className="text-xs text-slate-600 dark:text-slate-300 mb-1">{w.description}</p>}
+                        <p className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 line-clamp-2 leading-relaxed">{w.extract}</p>
                       </div>
                     </button>
                   ))}
@@ -482,9 +482,9 @@ export default function NewPostPage() {
         )}
 
         {/* 저장 */}
-        <div className="flex gap-2 justify-end pt-6 border-t border-slate-200">
+        <div className="flex gap-2 justify-end pt-6 border-t border-slate-200 dark:border-slate-800">
           <button onClick={() => handleSave("draft")} disabled={saving}
-            className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50 text-sm font-medium">
+            className="px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 dark:bg-slate-900 text-sm font-medium">
             초안 저장
           </button>
           <button onClick={() => handleSave("published")} disabled={saving}

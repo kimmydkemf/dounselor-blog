@@ -30,22 +30,22 @@ export default function BoardJoinPage({ params }) {
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-6">
       <div className="w-full max-w-sm">
-        <div className="bg-white rounded-3xl border border-slate-200 shadow-xl p-8">
+        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl p-8">
           <div className="text-center mb-6">
             <div className="text-4xl mb-3">📋</div>
-            <h1 className="text-xl font-bold tracking-tight text-slate-900">보드 참여하기</h1>
-            <p className="text-xs text-slate-500 mt-2">
-              초대 코드 <span className="font-mono font-bold text-slate-800">{params.code}</span>
+            <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">보드 참여하기</h1>
+            <p className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-2">
+              초대 코드 <span className="font-mono font-bold text-slate-800 dark:text-slate-100">{params.code}</span>
             </p>
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-600 block mb-1.5">표시할 이름</label>
+            <label className="text-xs font-semibold text-slate-600 dark:text-slate-300 block mb-1.5">표시할 이름</label>
             <input type="text" value={name} onChange={e => setName(e.target.value)}
               onKeyDown={e => e.key === "Enter" && join()}
               placeholder="예) 김유저" autoFocus maxLength={30}
-              className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500" />
-            <p className="text-[11px] text-slate-400 mt-1.5">보드 안에서 카드 작성/수정 시 표시됩니다.</p>
+              className="w-full border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-500" />
+            <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-1.5">보드 안에서 카드 작성/수정 시 표시됩니다.</p>
           </div>
 
           {err && <p className="text-xs text-red-500 mt-3">⚠ {err}</p>}
@@ -58,7 +58,7 @@ export default function BoardJoinPage({ params }) {
           {/* divider */}
           <div className="flex items-center gap-3 my-4">
             <div className="flex-1 h-px bg-slate-200" />
-            <span className="text-[10px] uppercase tracking-widest text-slate-400">또는</span>
+            <span className="text-[10px] uppercase tracking-widest text-slate-400 dark:text-slate-500">또는</span>
             <div className="flex-1 h-px bg-slate-200" />
           </div>
 
@@ -71,7 +71,7 @@ export default function BoardJoinPage({ params }) {
             카카오로 참여
           </a>
 
-          <p className="text-[11px] text-slate-400 text-center mt-4 leading-relaxed">
+          <p className="text-[11px] text-slate-400 dark:text-slate-500 text-center mt-4 leading-relaxed">
             익명 참여는 90일간 이 보드에서만 활동 가능.<br />
             카카오로 참여하면 다음 접속 때도 자동 인식됩니다.
           </p>

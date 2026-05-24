@@ -54,9 +54,9 @@ export default function BlogIndex({ searchParams }) {
 
       {/* ── Owner 액션바 ── */}
       {isOwner && (
-        <div className="border-y border-slate-100 bg-slate-50/50">
+        <div className="border-y border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50">
           <div className="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between flex-wrap gap-2">
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500">
               소유자 모드
               {draftCount > 0 && (
                 <span className="ml-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-semibold">
@@ -66,11 +66,11 @@ export default function BlogIndex({ searchParams }) {
             </p>
             <div className="flex gap-2">
               <Link href="/blog/categories"
-                className="text-xs px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 transition-colors">
+                className="text-xs px-3 py-1.5 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 dark:bg-slate-800 transition-colors">
                 카테고리 관리
               </Link>
               <Link href="/blog/journal/auto"
-                className="text-xs px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 transition-colors">
+                className="text-xs px-3 py-1.5 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 dark:bg-slate-800 transition-colors">
                 ✨ 오늘의 일지 자동 작성
               </Link>
               <Link href="/blog/new"
@@ -136,9 +136,9 @@ export default function BlogIndex({ searchParams }) {
 
         {/* 글 목록 */}
         {posts.length === 0 ? (
-          <div className="text-center py-24 rounded-3xl border border-dashed border-slate-200 bg-slate-50/40">
+          <div className="text-center py-24 rounded-3xl border border-dashed border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/40">
             <div className="text-5xl mb-3 opacity-30">✍️</div>
-            <p className="text-slate-500 text-sm mb-4">
+            <p className="text-slate-500 dark:text-slate-400 dark:text-slate-500 text-sm mb-4">
               {activeCat ? `"${activeCat.name}" 에 아직 글이 없습니다.` : "아직 글이 없습니다."}
             </p>
             {isOwner && (
@@ -173,7 +173,7 @@ function FeaturedCard({ post }) {
         <div className="md:col-span-3 relative">
           <CategoryCover slug={post.category_slug} aspect="16/10" className="h-full" />
         </div>
-        <div className="md:col-span-2 p-8 md:p-10 flex flex-col justify-center bg-white">
+        <div className="md:col-span-2 p-8 md:p-10 flex flex-col justify-center bg-white dark:bg-slate-900">
           <div className="flex items-center gap-1.5 mb-4">
             <span className="inline-flex items-center gap-1 text-[10px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-full bg-slate-900 text-white w-fit">
               ★ Featured
@@ -190,13 +190,13 @@ function FeaturedCard({ post }) {
               {post.category_icon} {post.category_name}
             </span>
           )}
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 group-hover:text-indigo-700 transition-colors leading-tight">
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-white group-hover:text-indigo-700 transition-colors leading-tight">
             {post.title}
           </h2>
           {post.excerpt && (
-            <p className="mt-3 text-base text-slate-500 leading-relaxed line-clamp-3">{post.excerpt}</p>
+            <p className="mt-3 text-base text-slate-500 dark:text-slate-400 dark:text-slate-500 leading-relaxed line-clamp-3">{post.excerpt}</p>
           )}
-          <div className="mt-5 flex items-center justify-between text-xs text-slate-400">
+          <div className="mt-5 flex items-center justify-between text-xs text-slate-400 dark:text-slate-500">
             <span>{post.published_at ? new Date(post.published_at).toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric" }) : "—"}</span>
             <span className="font-medium text-indigo-600 group-hover:translate-x-1 transition-transform">읽으러 가기 →</span>
           </div>
@@ -209,7 +209,7 @@ function FeaturedCard({ post }) {
 function PostCard({ post }) {
   return (
     <Link href={`/blog/${post.slug}`}
-      className="group block bg-white border border-slate-200 rounded-2xl overflow-hidden card-lift">
+      className="group block bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden card-lift">
       <CategoryCover slug={post.category_slug} aspect="16/10">
         {post.status === "draft" && (
           <div className="absolute right-3 top-3 text-[10px] font-bold tracking-widest uppercase px-2 py-1 rounded-full bg-amber-200/95 text-amber-900">
@@ -223,13 +223,13 @@ function PostCard({ post }) {
         )}
       </CategoryCover>
       <div className="p-5">
-        <h3 className="text-base font-bold text-slate-900 mb-2 line-clamp-2 group-hover:text-indigo-700 transition-colors">
+        <h3 className="text-base font-bold text-slate-900 dark:text-white mb-2 line-clamp-2 group-hover:text-indigo-700 transition-colors">
           {post.title}
         </h3>
         {post.excerpt && (
-          <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed">{post.excerpt}</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400 dark:text-slate-500 line-clamp-2 leading-relaxed">{post.excerpt}</p>
         )}
-        <div className="mt-4 flex items-center justify-between text-xs text-slate-400">
+        <div className="mt-4 flex items-center justify-between text-xs text-slate-400 dark:text-slate-500">
           <span>{post.published_at ? new Date(post.published_at).toLocaleDateString("ko-KR") : "—"}</span>
           {post.tags && (
             <div className="flex gap-1">

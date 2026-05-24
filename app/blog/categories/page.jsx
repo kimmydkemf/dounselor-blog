@@ -40,7 +40,7 @@ export default function CategoriesPage() {
         <Link href="/blog" className="text-sm text-gray-500 hover:text-gray-800">← 블로그</Link>
       </div>
 
-      <form onSubmit={handleAdd} className="flex gap-2 mb-6 bg-white border border-gray-200 rounded-xl p-3">
+      <form onSubmit={handleAdd} className="flex gap-2 mb-6 bg-white dark:bg-slate-900 border border-gray-200 rounded-xl p-3">
         <input type="text" value={form.icon} onChange={set("icon")}
           placeholder="🎯" maxLength={4}
           className="w-16 border border-gray-200 rounded-lg px-3 py-2 text-center text-lg" />
@@ -53,7 +53,7 @@ export default function CategoriesPage() {
         </button>
       </form>
 
-      <ul className="bg-white border border-gray-200 rounded-xl divide-y divide-gray-100">
+      <ul className="bg-white dark:bg-slate-900 border border-gray-200 rounded-xl divide-y divide-gray-100">
         {cats.map(c => (
           <li key={c.id} className="flex items-center gap-3 px-4 py-3">
             <span className="text-xl">{c.icon || "📁"}</span>

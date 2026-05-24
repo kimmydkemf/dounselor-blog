@@ -272,7 +272,7 @@ export default function BoardDetail({ params }) {
               <input type="text" defaultValue={board.name} autoFocus
                 onBlur={e => renameBoard(e.target.value)}
                 onKeyDown={e => e.key === "Enter" && renameBoard(e.target.value)}
-                className="text-xl font-bold tracking-tight bg-white/10 text-white border border-white/30 rounded px-2 py-0.5 focus:outline-none focus:bg-white/20 placeholder-white/50" />
+                className="text-xl font-bold tracking-tight bg-white dark:bg-slate-900/10 text-white border border-white/30 rounded px-2 py-0.5 focus:outline-none focus:bg-white dark:bg-slate-900/20 placeholder-white/50" />
             ) : (
               <button onClick={() => isOwner && setEditName(true)}
                 className={`text-xl font-bold tracking-tight text-white truncate ${isOwner ? "hover:text-white/80 cursor-text" : "cursor-default"}`}>
@@ -282,12 +282,12 @@ export default function BoardDetail({ params }) {
           </div>
           <div className="flex items-center gap-2">
             <button onClick={openMembers}
-              className="px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 text-white text-xs font-semibold backdrop-blur border border-white/10 transition-colors flex items-center gap-1.5">
+              className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900/15 hover:bg-white dark:bg-slate-900/25 text-white text-xs font-semibold backdrop-blur border border-white/10 transition-colors flex items-center gap-1.5">
               <span>👥</span> 멤버 · 초대
             </button>
             {isOwner && (
               <button onClick={() => setShowBg(v => !v)}
-                className="px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 text-white text-xs font-semibold backdrop-blur border border-white/10 transition-colors flex items-center gap-1.5">
+                className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900/15 hover:bg-white dark:bg-slate-900/25 text-white text-xs font-semibold backdrop-blur border border-white/10 transition-colors flex items-center gap-1.5">
                 <span>🎨</span> 배경
               </button>
             )}
@@ -421,23 +421,23 @@ function BoardList({ list, listIndex, onRename, onDelete, onAddCard, onOpenCard,
         onDragOver={onHeaderDragOver} onDragLeave={onHeaderDragLeave} onDrop={onHeaderDrop}>
         {/* 명시적 drag handle — 이것만 잡고 끌어야 리스트 이동 */}
         <span draggable onDragStart={onHandleDragStart}
-          className="cursor-grab active:cursor-grabbing text-slate-400 hover:text-slate-700 select-none px-0.5"
+          className="cursor-grab active:cursor-grabbing text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 dark:text-slate-200 select-none px-0.5"
           title="리스트 드래그">⋮⋮</span>
 
         {editingName ? (
           <input type="text" defaultValue={list.name} autoFocus
             onBlur={e => { onRename(e.target.value.trim() || list.name); setEditingName(false); }}
             onKeyDown={e => e.key === "Enter" && e.target.blur()}
-            className="font-bold text-sm bg-white border border-indigo-300 rounded px-2 py-0.5 flex-1 focus:outline-none focus:border-indigo-500" />
+            className="font-bold text-sm bg-white dark:bg-slate-900 border border-indigo-300 rounded px-2 py-0.5 flex-1 focus:outline-none focus:border-indigo-500" />
         ) : (
           <button onClick={() => setEditingName(true)}
-            className="font-bold text-sm text-slate-800 hover:text-slate-900 truncate flex-1 text-left">
+            className="font-bold text-sm text-slate-800 dark:text-slate-100 hover:text-slate-900 dark:hover:text-white dark:text-white truncate flex-1 text-left">
             {list.name}
-            <span className="ml-1.5 text-xs font-normal text-slate-400 tabular">{list.cards.length}</span>
+            <span className="ml-1.5 text-xs font-normal text-slate-400 dark:text-slate-500 tabular">{list.cards.length}</span>
           </button>
         )}
         <button onClick={onDelete}
-          className="text-slate-400 hover:text-red-500 text-base leading-none px-1.5"
+          className="text-slate-400 dark:text-slate-500 hover:text-red-500 text-base leading-none px-1.5"
           title="리스트 삭제">×</button>
       </div>
 
@@ -450,7 +450,7 @@ function BoardList({ list, listIndex, onRename, onDelete, onAddCard, onOpenCard,
         ))}
 
         {adding ? (
-          <div className="bg-white rounded-lg p-2 shadow-md ring-1 ring-indigo-200">
+          <div className="bg-white dark:bg-slate-900 rounded-lg p-2 shadow-md ring-1 ring-indigo-200">
             <textarea value={newTitle} onChange={e => setNewTitle(e.target.value)}
               onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); submitNewCard(); } }}
               placeholder="이 카드의 제목 입력..." autoFocus rows={2}
@@ -459,12 +459,12 @@ function BoardList({ list, listIndex, onRename, onDelete, onAddCard, onOpenCard,
               <button onClick={submitNewCard}
                 className="text-xs px-3 py-1 rounded bg-indigo-600 text-white font-semibold hover:bg-indigo-700">카드 추가</button>
               <button onClick={() => { setAdding(false); setNewTitle(""); }}
-                className="text-xs px-2 py-1 text-slate-500 hover:text-slate-700">취소</button>
+                className="text-xs px-2 py-1 text-slate-500 dark:text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 dark:text-slate-200">취소</button>
             </div>
           </div>
         ) : (
           <button onClick={() => setAdding(true)}
-            className="w-full text-left text-xs text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded px-2 py-2 transition-colors flex items-center gap-1.5">
+            className="w-full text-left text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-white dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800 dark:bg-slate-800 rounded px-2 py-2 transition-colors flex items-center gap-1.5">
             <span className="text-base leading-none">+</span> 카드 추가
           </button>
         )}
@@ -506,7 +506,7 @@ function BoardCardItem({ card, index, listId, onOpen, moveCard }) {
       <button draggable onDragStart={onDragStart}
         onDragOver={onDragOver} onDragLeave={onDragLeave} onDrop={onDrop}
         onClick={onOpen}
-        className="w-full text-left bg-white rounded-lg p-2.5 shadow-sm hover:shadow-md hover:ring-2 hover:ring-indigo-300 transition-all cursor-grab active:cursor-grabbing">
+        className="w-full text-left bg-white dark:bg-slate-900 rounded-lg p-2.5 shadow-sm hover:shadow-md hover:ring-2 hover:ring-indigo-300 transition-all cursor-grab active:cursor-grabbing">
         {/* 라벨 색띠 */}
         {labels.length > 0 && (
           <div className="flex flex-wrap gap-1 mb-2">
@@ -516,11 +516,11 @@ function BoardCardItem({ card, index, listId, onOpen, moveCard }) {
             ))}
           </div>
         )}
-        <p className="text-sm text-slate-900 leading-snug whitespace-pre-wrap break-words">{card.title}</p>
+        <p className="text-sm text-slate-900 dark:text-white leading-snug whitespace-pre-wrap break-words">{card.title}</p>
 
         {/* 메타 푸터 */}
         {(card.description || card.due_date || checks.length > 0) && (
-          <div className="mt-2 flex items-center gap-2 flex-wrap text-[11px] text-slate-500">
+          <div className="mt-2 flex items-center gap-2 flex-wrap text-[11px] text-slate-500 dark:text-slate-400 dark:text-slate-500">
             {card.description && (
               <span title="설명 있음" className="inline-flex items-center">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="14" y2="18"/></svg>
@@ -553,22 +553,22 @@ function AddList({ onAdd }) {
   if (!adding) {
     return (
       <button onClick={() => setAdding(true)}
-        className="w-72 flex-shrink-0 rounded-2xl bg-white/15 hover:bg-white/25 backdrop-blur text-sm text-white py-3 transition-colors border border-white/10 font-medium">
+        className="w-72 flex-shrink-0 rounded-2xl bg-white dark:bg-slate-900/15 hover:bg-white dark:bg-slate-900/25 backdrop-blur text-sm text-white py-3 transition-colors border border-white/10 font-medium">
         + 다른 리스트 추가
       </button>
     );
   }
   return (
-    <div className="w-72 flex-shrink-0 rounded-2xl bg-white/95 backdrop-blur shadow-lg p-2">
+    <div className="w-72 flex-shrink-0 rounded-2xl bg-white dark:bg-slate-900/95 backdrop-blur shadow-lg p-2">
       <input type="text" value={name} onChange={e => setName(e.target.value)}
         onKeyDown={e => e.key === "Enter" && submit()}
         placeholder="리스트 이름" autoFocus
-        className="w-full text-sm border border-indigo-300 rounded px-2 py-1.5 bg-white focus:outline-none focus:border-indigo-500" />
+        className="w-full text-sm border border-indigo-300 rounded px-2 py-1.5 bg-white dark:bg-slate-900 focus:outline-none focus:border-indigo-500" />
       <div className="flex gap-1 mt-1.5">
         <button onClick={submit}
           className="text-xs px-3 py-1 rounded bg-indigo-600 text-white font-semibold hover:bg-indigo-700">리스트 추가</button>
         <button onClick={() => { setAdding(false); setName(""); }}
-          className="text-xs px-2 py-1 text-slate-500 hover:text-slate-700">취소</button>
+          className="text-xs px-2 py-1 text-slate-500 dark:text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 dark:text-slate-200">취소</button>
       </div>
     </div>
   );
@@ -669,18 +669,18 @@ function CardModal({ card, board, onClose, onUpdate, onDelete }) {
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-start justify-center p-4 pt-16 overflow-y-auto"
       onClick={onClose}>
-      <div className="bg-slate-50 rounded-2xl shadow-2xl w-full max-w-3xl my-4"
+      <div className="bg-slate-50 dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-3xl my-4"
         onClick={e => e.stopPropagation()}>
         {/* 헤더 */}
         <div className="p-6 pb-3">
           <input type="text" value={title} onChange={e => setTitle(e.target.value)}
             onBlur={() => saveField("title", title)}
             onKeyDown={e => e.key === "Enter" && e.target.blur()}
-            className="text-2xl font-bold tracking-tight text-slate-900 w-full border-0 bg-transparent focus:outline-none" />
-          <p className="text-xs text-slate-500 mt-1">
+            className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white w-full border-0 bg-transparent focus:outline-none" />
+          <p className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500 mt-1">
             리스트
             <select value={card.list_id} onChange={e => moveTo(e.target.value)}
-              className="ml-1 border border-slate-200 rounded px-1.5 py-0.5 bg-white text-xs">
+              className="ml-1 border border-slate-200 dark:border-slate-800 rounded px-1.5 py-0.5 bg-white dark:bg-slate-900 text-xs">
               {board.lists.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
             </select>
           </p>
@@ -692,7 +692,7 @@ function CardModal({ card, board, onClose, onUpdate, onDelete }) {
             {/* 라벨 표시 */}
             {(card.labels || []).length > 0 && (
               <div>
-                <p className="text-[10px] uppercase tracking-widest text-slate-500 mb-1.5">라벨</p>
+                <p className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 dark:text-slate-500 mb-1.5">라벨</p>
                 <div className="flex flex-wrap gap-1.5">
                   {card.labels.map(l => (
                     <span key={l} style={{ background: LABEL_COLORS[l]?.bg, color: LABEL_COLORS[l]?.text }}
@@ -707,7 +707,7 @@ function CardModal({ card, board, onClose, onUpdate, onDelete }) {
             {/* 마감일 표시 */}
             {card.due_date && (
               <div>
-                <p className="text-[10px] uppercase tracking-widest text-slate-500 mb-1.5">마감일</p>
+                <p className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 dark:text-slate-500 mb-1.5">마감일</p>
                 <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs font-medium ${dueClass(card.due_date)}`}>
                   📅 {fmtDueFull(card.due_date)}
                 </span>
@@ -716,7 +716,7 @@ function CardModal({ card, board, onClose, onUpdate, onDelete }) {
 
             {/* 설명 */}
             <div>
-              <p className="text-sm font-bold text-slate-800 mb-2 flex items-center gap-1.5">
+              <p className="text-sm font-bold text-slate-800 dark:text-slate-100 mb-2 flex items-center gap-1.5">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="14" y2="18"/></svg>
                 설명
               </p>
@@ -724,15 +724,15 @@ function CardModal({ card, board, onClose, onUpdate, onDelete }) {
                 onBlur={() => saveField("description", desc)}
                 placeholder="더 자세한 설명 — 마크다운 가능"
                 rows={6}
-                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm font-mono leading-relaxed bg-white focus:outline-none focus:border-indigo-500" />
+                className="w-full border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm font-mono leading-relaxed bg-white dark:bg-slate-900 focus:outline-none focus:border-indigo-500" />
             </div>
 
             {/* 체크리스트 */}
             <div>
-              <p className="text-sm font-bold text-slate-800 mb-2 flex items-center gap-1.5">
+              <p className="text-sm font-bold text-slate-800 dark:text-slate-100 mb-2 flex items-center gap-1.5">
                 <span>✓</span> 체크리스트
                 {checks.length > 0 && (
-                  <span className="ml-1 text-[11px] font-medium text-slate-500 tabular">{doneCount}/{checks.length}</span>
+                  <span className="ml-1 text-[11px] font-medium text-slate-500 dark:text-slate-400 dark:text-slate-500 tabular">{doneCount}/{checks.length}</span>
                 )}
               </p>
               {checks.length > 0 && (
@@ -749,7 +749,7 @@ function CardModal({ card, board, onClose, onUpdate, onDelete }) {
                       className="w-4 h-4 accent-emerald-600 cursor-pointer" />
                     <span className={c.done ? "line-through text-slate-400 flex-1" : "text-slate-800 flex-1"}>{c.text}</span>
                     <button onClick={() => removeCheckItem(i)}
-                      className="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-red-500 text-xs">×</button>
+                      className="opacity-0 group-hover:opacity-100 text-slate-400 dark:text-slate-500 hover:text-red-500 text-xs">×</button>
                   </li>
                 ))}
               </ul>
@@ -757,7 +757,7 @@ function CardModal({ card, board, onClose, onUpdate, onDelete }) {
                 <input type="text" value={newCheck} onChange={e => setNewCheck(e.target.value)}
                   onKeyDown={e => e.key === "Enter" && addChecklistItem()}
                   placeholder="항목 추가"
-                  className="flex-1 border border-slate-200 rounded px-2 py-1 text-sm focus:outline-none focus:border-indigo-500" />
+                  className="flex-1 border border-slate-200 dark:border-slate-800 rounded px-2 py-1 text-sm focus:outline-none focus:border-indigo-500" />
                 <button onClick={addChecklistItem} disabled={!newCheck.trim()}
                   className="px-3 py-1 rounded bg-slate-900 text-white text-xs font-semibold hover:bg-slate-700 disabled:opacity-50">추가</button>
               </div>
@@ -765,30 +765,30 @@ function CardModal({ card, board, onClose, onUpdate, onDelete }) {
 
             {/* 첨부 */}
             <div>
-              <p className="text-sm font-bold text-slate-800 mb-2 flex items-center gap-1.5">
+              <p className="text-sm font-bold text-slate-800 dark:text-slate-100 mb-2 flex items-center gap-1.5">
                 <span>📎</span> 첨부
-                {attachments.length > 0 && <span className="ml-1 text-[11px] font-medium text-slate-500 tabular">{attachments.length}개</span>}
+                {attachments.length > 0 && <span className="ml-1 text-[11px] font-medium text-slate-500 dark:text-slate-400 dark:text-slate-500 tabular">{attachments.length}개</span>}
               </p>
               {attachments.length > 0 && (
                 <ul className="space-y-1.5 mb-2">
                   {attachments.map(a => (
-                    <li key={a.id} className="group flex items-center gap-2 bg-white border border-slate-200 rounded-lg p-2">
+                    <li key={a.id} className="group flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-2">
                       {a.mime.startsWith("image/") ? (
                         <a href={`/api/board-cards/attachments/${a.id}`} target="_blank" rel="noopener"
-                          className="w-14 h-14 rounded bg-slate-100 overflow-hidden flex-shrink-0">
+                          className="w-14 h-14 rounded bg-slate-100 dark:bg-slate-800 overflow-hidden flex-shrink-0">
                           <img src={`/api/board-cards/attachments/${a.id}`} alt="" className="w-full h-full object-cover" />
                         </a>
                       ) : (
-                        <div className="w-14 h-14 rounded bg-slate-100 flex items-center justify-center text-2xl flex-shrink-0">
+                        <div className="w-14 h-14 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-2xl flex-shrink-0">
                           {a.mime.includes("pdf") ? "📄" : a.mime.startsWith("video") ? "🎬" : "📎"}
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
                         <a href={`/api/board-cards/attachments/${a.id}`} target="_blank" rel="noopener"
-                          className="text-sm font-medium text-slate-800 hover:text-indigo-700 truncate block">
+                          className="text-sm font-medium text-slate-800 dark:text-slate-100 hover:text-indigo-700 truncate block">
                           {a.name}
                         </a>
-                        <div className="text-[11px] text-slate-400">
+                        <div className="text-[11px] text-slate-400 dark:text-slate-500">
                           {fmtSize(a.size)} · {a.uploader} · {fmtRelDate(a.created_at)}
                         </div>
                       </div>
@@ -811,24 +811,24 @@ function CardModal({ card, board, onClose, onUpdate, onDelete }) {
 
             {/* 댓글 */}
             <div>
-              <p className="text-sm font-bold text-slate-800 mb-2 flex items-center gap-1.5">
+              <p className="text-sm font-bold text-slate-800 dark:text-slate-100 mb-2 flex items-center gap-1.5">
                 <span>💬</span> 댓글
-                {comments.length > 0 && <span className="ml-1 text-[11px] font-medium text-slate-500 tabular">{comments.length}개</span>}
+                {comments.length > 0 && <span className="ml-1 text-[11px] font-medium text-slate-500 dark:text-slate-400 dark:text-slate-500 tabular">{comments.length}개</span>}
               </p>
               <ul className="space-y-2 mb-3">
                 {comments.map(c => (
                   <li key={c.id} className="group flex gap-2.5">
                     <Avatar name={c.author_name} />
                     <div className="flex-1 min-w-0">
-                      <div className="bg-white border border-slate-200 rounded-lg px-3 py-2">
+                      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2">
                         <div className="flex items-baseline justify-between gap-2 mb-1">
-                          <div className="text-sm font-semibold text-slate-800 truncate">{c.author_name}</div>
-                          <div className="text-[10px] text-slate-400 flex-shrink-0">{fmtRelDate(c.created_at)}</div>
+                          <div className="text-sm font-semibold text-slate-800 dark:text-slate-100 truncate">{c.author_name}</div>
+                          <div className="text-[10px] text-slate-400 dark:text-slate-500 flex-shrink-0">{fmtRelDate(c.created_at)}</div>
                         </div>
-                        <p className="text-sm text-slate-700 whitespace-pre-wrap break-words">{c.body}</p>
+                        <p className="text-sm text-slate-700 dark:text-slate-200 whitespace-pre-wrap break-words">{c.body}</p>
                       </div>
                       <button onClick={() => removeComment(c.id)}
-                        className="opacity-0 group-hover:opacity-100 text-[10px] text-slate-400 hover:text-red-500 mt-0.5 ml-3">삭제</button>
+                        className="opacity-0 group-hover:opacity-100 text-[10px] text-slate-400 dark:text-slate-500 hover:text-red-500 mt-0.5 ml-3">삭제</button>
                     </div>
                   </li>
                 ))}
@@ -838,7 +838,7 @@ function CardModal({ card, board, onClose, onUpdate, onDelete }) {
                   onKeyDown={e => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) { e.preventDefault(); submitComment(); } }}
                   placeholder="댓글 — ⌘/Ctrl + Enter 로 전송"
                   rows={2}
-                  className="flex-1 border border-slate-200 rounded-lg px-3 py-2 text-sm resize-none focus:outline-none focus:border-indigo-500" />
+                  className="flex-1 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-sm resize-none focus:outline-none focus:border-indigo-500" />
                 <button onClick={submitComment} disabled={!newComment.trim()}
                   className="px-3 py-2 rounded-lg bg-slate-900 text-white text-sm font-semibold hover:bg-slate-700 disabled:opacity-50 self-end">전송</button>
               </div>
@@ -847,16 +847,16 @@ function CardModal({ card, board, onClose, onUpdate, onDelete }) {
 
           {/* 우 — 사이드바 */}
           <aside className="space-y-2">
-            <p className="text-[10px] uppercase tracking-widest text-slate-500">카드에 추가</p>
+            <p className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 dark:text-slate-500">카드에 추가</p>
 
             <div className="relative">
               <button onClick={() => setShowLabels(v => !v)}
-                className="w-full px-3 py-2 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 text-sm font-medium text-slate-700 transition-colors flex items-center gap-2">
+                className="w-full px-3 py-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 dark:bg-slate-800 text-sm font-medium text-slate-700 dark:text-slate-200 transition-colors flex items-center gap-2">
                 <span className="text-base">🏷</span> 라벨
               </button>
               {showLabels && (
-                <div className="absolute right-0 top-full mt-1 w-56 bg-white rounded-lg shadow-xl border border-slate-200 p-2 z-10">
-                  <p className="text-[10px] uppercase tracking-widest text-slate-500 px-1 mb-1.5">라벨 선택</p>
+                <div className="absolute right-0 top-full mt-1 w-56 bg-white dark:bg-slate-900 rounded-lg shadow-xl border border-slate-200 dark:border-slate-800 p-2 z-10">
+                  <p className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 dark:text-slate-500 px-1 mb-1.5">라벨 선택</p>
                   <div className="space-y-1">
                     {LABEL_KEYS.map(l => {
                       const active = (card.labels || []).includes(l);
@@ -875,7 +875,7 @@ function CardModal({ card, board, onClose, onUpdate, onDelete }) {
             </div>
 
             <div>
-              <label className="w-full px-3 py-2 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 text-sm font-medium text-slate-700 transition-colors flex items-center gap-2 cursor-pointer">
+              <label className="w-full px-3 py-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 dark:bg-slate-800 text-sm font-medium text-slate-700 dark:text-slate-200 transition-colors flex items-center gap-2 cursor-pointer">
                 <span className="text-base">📅</span> 마감일
                 <input type="date" value={due} onChange={e => setDue(e.target.value)}
                   onBlur={() => saveField("due_date", due)}
@@ -883,12 +883,12 @@ function CardModal({ card, board, onClose, onUpdate, onDelete }) {
               </label>
               {due && (
                 <button onClick={() => { setDue(""); onUpdate({ due_date: "" }); }}
-                  className="text-[11px] text-slate-400 hover:text-red-500 mt-1 px-3">마감일 지우기</button>
+                  className="text-[11px] text-slate-400 dark:text-slate-500 hover:text-red-500 mt-1 px-3">마감일 지우기</button>
               )}
             </div>
 
-            <div className="pt-3 border-t border-slate-200">
-              <p className="text-[10px] uppercase tracking-widest text-slate-500 mb-2">작업</p>
+            <div className="pt-3 border-t border-slate-200 dark:border-slate-800">
+              <p className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 dark:text-slate-500 mb-2">작업</p>
               <button onClick={onDelete}
                 className="w-full px-3 py-2 rounded-lg bg-red-50 hover:bg-red-100 text-red-700 text-sm font-medium transition-colors flex items-center gap-2">
                 <span>🗑</span> 카드 삭제
@@ -921,9 +921,9 @@ function MembersPanel({ board, invite, isOwner, onClose, onRotate, onRemoveGuest
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-start justify-end p-4"
       onClick={onClose}>
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 mt-16"
+      <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-sm p-6 mt-16"
         onClick={e => e.stopPropagation()}>
-        <h2 className="text-lg font-bold tracking-tight text-slate-900 mb-4">멤버 · 초대</h2>
+        <h2 className="text-lg font-bold tracking-tight text-slate-900 dark:text-white mb-4">멤버 · 초대</h2>
 
         {/* 초대 링크 */}
         <div className="mb-5 p-3 rounded-xl bg-indigo-50/70 border border-indigo-100">
@@ -931,42 +931,42 @@ function MembersPanel({ board, invite, isOwner, onClose, onRotate, onRemoveGuest
           {invite ? (
             <>
               <div className="flex items-center gap-2 mb-2">
-                <code className="text-sm font-mono bg-white px-2 py-1 rounded border border-indigo-200 flex-1 truncate">{invite.code}</code>
+                <code className="text-sm font-mono bg-white dark:bg-slate-900 px-2 py-1 rounded border border-indigo-200 flex-1 truncate">{invite.code}</code>
                 <button onClick={copy}
                   className="text-xs px-3 py-1.5 rounded-lg bg-indigo-600 text-white font-semibold hover:bg-indigo-700">
                   {copied ? "✓ 복사됨" : "링크 복사"}
                 </button>
               </div>
-              <p className="text-[11px] text-slate-600 break-all">{url}</p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 break-all">{url}</p>
               {isOwner && (
                 <button onClick={onRotate}
-                  className="mt-2 text-[11px] text-slate-500 hover:text-red-500">↻ 코드 새로 발급</button>
+                  className="mt-2 text-[11px] text-slate-500 dark:text-slate-400 dark:text-slate-500 hover:text-red-500">↻ 코드 새로 발급</button>
               )}
             </>
           ) : (
-            <p className="text-xs text-slate-500">불러오는 중…</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 dark:text-slate-500">불러오는 중…</p>
           )}
         </div>
 
         {/* 멤버 목록 */}
         <div>
-          <p className="text-[10px] uppercase tracking-widest text-slate-500 font-semibold mb-2">
+          <p className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 dark:text-slate-500 font-semibold mb-2">
             멤버 · {(invite?.guests?.length || 0) + 1}명
           </p>
           <ul className="space-y-1.5">
-            <li className="flex items-center gap-2.5 px-2 py-1.5 rounded-lg bg-slate-50">
+            <li className="flex items-center gap-2.5 px-2 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-900">
               <Avatar name="나" color={board.color} />
               <div className="flex-1 min-w-0">
-                <div className="text-sm font-semibold text-slate-800">나 (소유자)</div>
+                <div className="text-sm font-semibold text-slate-800 dark:text-slate-100">나 (소유자)</div>
               </div>
               <span className="text-[10px] font-bold tracking-wider uppercase px-1.5 py-0.5 rounded bg-amber-100 text-amber-800">OWNER</span>
             </li>
             {(invite?.guests || []).map(g => (
-              <li key={g.id} className="group flex items-center gap-2.5 px-2 py-1.5 rounded-lg hover:bg-slate-50">
+              <li key={g.id} className="group flex items-center gap-2.5 px-2 py-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 dark:bg-slate-900">
                 <Avatar name={g.name} />
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-semibold text-slate-800 truncate">{g.name}</div>
-                  <div className="text-[10px] text-slate-400">참여 {fmtRelDate(g.joined_at)}</div>
+                  <div className="text-sm font-semibold text-slate-800 dark:text-slate-100 truncate">{g.name}</div>
+                  <div className="text-[10px] text-slate-400 dark:text-slate-500">참여 {fmtRelDate(g.joined_at)}</div>
                 </div>
                 {isOwner && (
                   <button onClick={() => onRemoveGuest(g.id)}
@@ -976,11 +976,11 @@ function MembersPanel({ board, invite, isOwner, onClose, onRotate, onRemoveGuest
             ))}
           </ul>
           {(invite?.guests?.length || 0) === 0 && (
-            <p className="text-xs text-slate-400 text-center py-3">아직 게스트 없음 — 위 링크를 보내 초대해보세요.</p>
+            <p className="text-xs text-slate-400 dark:text-slate-500 text-center py-3">아직 게스트 없음 — 위 링크를 보내 초대해보세요.</p>
           )}
         </div>
 
-        <div className="mt-5 pt-4 border-t border-slate-100 flex justify-end">
+        <div className="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
           <button onClick={onClose}
             className="px-4 py-1.5 rounded-lg bg-slate-900 text-white text-sm font-semibold hover:bg-slate-700">닫기</button>
         </div>
