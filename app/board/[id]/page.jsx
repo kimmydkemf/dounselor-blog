@@ -918,6 +918,47 @@ function MembersPanel({ board, invite, isOwner, onClose, onRotate, onRemoveGuest
     catch { prompt("이 링크를 복사해서 보내세요:", url); }
   };
 
+  /** 카카오톡 공유 — Kakao JS SDK 가 로드돼있어야 동작 */
+  const shareKakao = () => {
+    if (typeof window === "undefined") return;
+    const K = window.Kakao;
+    if (!K?.Share) {
+      alert("카카오 공유 SDK 가 로드되지 않았습니다.\n환경변수 NEXT_PUBLIC_KAKAO_JS_KEY 설정 후 재시작해주세요.");
+      return;
+    }
+    try {
+      K.Share.sendDefault({
+        objectType: "feed",
+        content: {
+          title: `📋 ${board.name} — 보드 참여 초대`,
+          description: `함께 일하는 칸반 보드에 초대됐어요.\n카카오 계정으로 빠르게 참여해보세요.`,
+          imageUrl: `${window.location.origin}/icon-512.png`,
+          link: { mobileWebUrl: url, webUrl: url },
+        },
+        buttons: [
+          { title: "참여하기", link: { mobileWebUrl: url, webUrl: url } },
+        ],
+      });
+    } catch (e) {
+      alert("카카오 공유 실패: " + e.message);
+    }
+  };
+
+  // 모바일 네이티브 share (PC 에선 폴백 안 동작)
+  const shareNative = async () => {
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        await navigator.share({
+          title: `${board.name} — 보드 참여 초대`,
+          text: "함께 일하는 칸반 보드에 초대됐어요. 카카오 계정으로 빠르게 참여하세요.",
+          url,
+        });
+      } catch {}
+    } else {
+      copy();
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-start justify-end p-4"
       onClick={onClose}>
@@ -931,16 +972,34 @@ function MembersPanel({ board, invite, isOwner, onClose, onRotate, onRemoveGuest
           {invite ? (
             <>
               <div className="flex items-center gap-2 mb-2">
-                <code className="text-sm font-mono bg-white dark:bg-slate-900 px-2 py-1 rounded border border-indigo-200 flex-1 truncate">{invite.code}</code>
+                <code className="text-sm font-mono bg-white dark:bg-slate-900 px-2 py-1 rounded border border-indigo-200 dark:border-indigo-500/30 flex-1 truncate">{invite.code}</code>
                 <button onClick={copy}
                   className="text-xs px-3 py-1.5 rounded-lg bg-indigo-600 text-white font-semibold hover:bg-indigo-700">
                   {copied ? "✓ 복사됨" : "링크 복사"}
                 </button>
               </div>
-              <p className="text-[11px] text-slate-600 dark:text-slate-300 break-all">{url}</p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 break-all mb-2">{url}</p>
+
+              {/* 공유 버튼들 */}
+              <div className="flex gap-1.5 flex-wrap mt-2">
+                <button onClick={shareKakao}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FEE500] hover:bg-[#FDD800] text-[#191919] text-xs font-semibold transition-colors shadow-sm">
+                  <svg width="12" height="12" viewBox="0 0 256 256" aria-hidden>
+                    <path fill="#191919" d="M128 36C70.56 36 24 72.93 24 118.5c0 29.2 19.3 54.86 48.4 69.46-1.4 5.4-9 31.65-9.4 33.7-.5 2.55 1.3 4.27 3.2 4.27 1.5 0 2.95-.66 4.4-1.55 1.7-1.05 26.6-17.55 36.1-23.85 7 1 14.1 1.45 21.3 1.45 57.44 0 104-36.93 104-82.5S185.44 36 128 36z"/>
+                  </svg>
+                  카카오톡으로 보내기
+                </button>
+                {typeof navigator !== "undefined" && navigator.share && (
+                  <button onClick={shareNative}
+                    className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold transition-colors">
+                    📤 다른 앱
+                  </button>
+                )}
+              </div>
+
               {isOwner && (
                 <button onClick={onRotate}
-                  className="mt-2 text-[11px] text-slate-500 dark:text-slate-400 dark:text-slate-500 hover:text-red-500">↻ 코드 새로 발급</button>
+                  className="mt-3 text-[11px] text-slate-500 dark:text-slate-400 hover:text-red-500">↻ 코드 새로 발급</button>
               )}
             </>
           ) : (

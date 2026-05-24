@@ -48,6 +48,30 @@ KAKAO_REDIRECT_URI=https://blog.dounselor.com/api/auth/kakao/callback
 - **프론트엔드 UI** — 로그인 페이지에 "카카오로 시작하기" 버튼 추가는 키 발급 후 진행 권장
   (지금 붙여놓으면 키 없는 상태에서 501 에러)
 
+## 카카오톡 공유 (보드 초대 링크 발송)
+
+보드 멤버 패널의 **"카카오톡으로 보내기"** 버튼은 별도 키가 필요합니다.
+
+### 키 발급
+- Kakao Developers → 앱 정보 → **앱 키** 페이지
+- **JavaScript 키** 복사 (REST API 키와 다름!)
+
+### `.env.local` 추가
+```
+NEXT_PUBLIC_KAKAO_JS_KEY=발급받은_JavaScript_키
+```
+`NEXT_PUBLIC_` prefix 필수 — 클라이언트 코드에서 사용.
+
+### 플랫폼 등록 확인
+- 앱 설정 → 플랫폼 → Web 플랫폼 등록 시 입력한 도메인이 카카오톡 공유 동작 도메인과 일치해야 함
+- `https://blog.dounselor.com` 등록돼있어야 함
+
+### 카카오톡 공유 활성화
+- 제품 설정 → 카카오톡 공유 → **활성화 ON** 확인 (또는 따로 활성 안 해도 JS SDK 만으로 사용 가능 — 카카오 정책 자주 바뀜)
+
+### 키 없으면
+JavaScript 키 미설정 시 SDK 자체가 로드 안 됨. 멤버 패널의 "카카오톡으로 보내기" 버튼 클릭하면 alert 로 안내.
+
 ## 보안 메모
 - `state` 파라미터로 CSRF 방지 (random 16 bytes + 쿠키 비교)
 - `kakao_state` 쿠키는 10분 만료, 콜백 직후 삭제

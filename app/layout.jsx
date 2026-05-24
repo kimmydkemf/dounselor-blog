@@ -5,6 +5,7 @@ import { visitorService } from "@/services/visitorService";
 import VisitorPing from "@/components/VisitorPing";
 import InstallPrompt from "@/components/InstallPrompt";
 import ThemeToggle from "@/components/ThemeToggle";
+import KakaoShareScript from "@/components/KakaoShareScript";
 
 export const metadata = {
   title: {
@@ -71,6 +72,7 @@ export default function RootLayout({ children }) {
         <main>{children}</main>
         <Footer isOwner={isOwner} stats={stats} />
         <InstallPrompt />
+        <KakaoShareScript />
       </body>
     </html>
   );
