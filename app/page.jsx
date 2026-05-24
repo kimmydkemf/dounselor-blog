@@ -199,20 +199,35 @@ function StatTile({ n, label, accent }) {
   );
 }
 
-/** Features 카드 — Linear 식 */
+/** Features 카드 — Linear 식. 라이트는 파스텔 그라데이션, 다크는 짙은 슬레이트 위 컬러 액센트. */
 function FeatureCard({ icon, title, desc, tone }) {
   const tones = {
-    indigo:  { bg: "from-indigo-50 via-white to-violet-50", border: "border-indigo-100", icon: "from-indigo-500 to-violet-600", text: "text-indigo-700" },
-    rose:    { bg: "from-rose-50 via-white to-pink-50",     border: "border-rose-100",   icon: "from-rose-500 to-pink-600",     text: "text-rose-700" },
-    emerald: { bg: "from-emerald-50 via-white to-teal-50",  border: "border-emerald-100", icon: "from-emerald-500 to-teal-600",  text: "text-emerald-700" },
+    indigo: {
+      bg:     "from-indigo-50 via-white to-violet-50",
+      bgDark: "dark:from-indigo-500/10 dark:via-slate-900 dark:to-violet-500/10",
+      border: "border-indigo-100 dark:border-indigo-500/20",
+      icon:   "from-indigo-500 to-violet-600",
+    },
+    rose: {
+      bg:     "from-rose-50 via-white to-pink-50",
+      bgDark: "dark:from-rose-500/10 dark:via-slate-900 dark:to-pink-500/10",
+      border: "border-rose-100 dark:border-rose-500/20",
+      icon:   "from-rose-500 to-pink-600",
+    },
+    emerald: {
+      bg:     "from-emerald-50 via-white to-teal-50",
+      bgDark: "dark:from-emerald-500/10 dark:via-slate-900 dark:to-teal-500/10",
+      border: "border-emerald-100 dark:border-emerald-500/20",
+      icon:   "from-emerald-500 to-teal-600",
+    },
   };
   const t = tones[tone] || tones.indigo;
   return (
-    <div className={`group relative rounded-3xl p-7 border ${t.border} bg-gradient-to-br ${t.bg} shadow-elevated transition-all hover:-translate-y-1 overflow-hidden`}>
-      {/* 데코 블롭 */}
-      <div className={`absolute -top-8 -right-8 w-32 h-32 rounded-full bg-gradient-to-br ${t.icon} opacity-10 blur-2xl group-hover:opacity-20 transition-opacity`} />
+    <div className={`group relative rounded-3xl p-7 border ${t.border} bg-gradient-to-br ${t.bg} ${t.bgDark} shadow-elevated transition-all hover:-translate-y-1 overflow-hidden`}>
+      {/* 데코 블롭 — 다크에선 더 진하게 */}
+      <div className={`absolute -top-8 -right-8 w-32 h-32 rounded-full bg-gradient-to-br ${t.icon} opacity-10 dark:opacity-25 blur-2xl group-hover:opacity-20 dark:group-hover:opacity-40 transition-opacity`} />
 
-      <div className={`relative w-12 h-12 rounded-2xl bg-gradient-to-br ${t.icon} flex items-center justify-center text-2xl shadow-lg mb-5`}>
+      <div className={`relative w-12 h-12 rounded-2xl bg-gradient-to-br ${t.icon} flex items-center justify-center text-2xl shadow-lg dark:shadow-xl mb-5 ring-1 ring-white/10`}>
         {icon}
       </div>
       <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight mb-2">{title}</h3>
