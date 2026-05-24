@@ -90,7 +90,7 @@ export default function HomePage() {
       <section className="max-w-6xl mx-auto px-6 py-24 md:py-32">
         <div className="text-center mb-14">
           <p className="text-xs font-semibold tracking-[0.3em] uppercase text-indigo-600 mb-3">Why Dounselor</p>
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-slate-900 max-w-2xl mx-auto leading-tight">
+          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-slate-900 dark:text-white max-w-2xl mx-auto leading-tight">
             기록은 흩어지면 사라지고,
             <br />
             모이면 자산이 됩니다.
@@ -154,7 +154,7 @@ export default function HomePage() {
           <div className="flex items-end justify-between mb-10">
             <div>
               <p className="text-xs font-semibold tracking-[0.3em] uppercase text-indigo-600 mb-3">Recent</p>
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900">최근 글</h2>
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-white">최근 글</h2>
             </div>
             <Link href="/blog" className="text-sm font-medium text-indigo-600 hover:text-indigo-800">전체 →</Link>
           </div>

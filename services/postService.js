@@ -118,6 +118,25 @@ export const postService = {
     return db.prepare("DELETE FROM posts WHERE id=?").run(id).changes;
   },
 
+  /** 같은 카테고리의 다른 published 글 (현재 글 제외) */
+  related(postId, categoryId, limit = 4) {
+    if (!categoryId) {
+      // 카테고리 없으면 전체에서 최신
+      return db.prepare(`
+        SELECT p.*, c.slug AS category_slug, c.name AS category_name, c.icon AS category_icon, c.color AS category_color
+        FROM posts p LEFT JOIN categories c ON p.category_id = c.id
+        WHERE p.status='published' AND p.id != ?
+        ORDER BY COALESCE(p.published_at, p.created_at) DESC LIMIT ?
+      `).all(postId, limit);
+    }
+    return db.prepare(`
+      SELECT p.*, c.slug AS category_slug, c.name AS category_name, c.icon AS category_icon, c.color AS category_color
+      FROM posts p LEFT JOIN categories c ON p.category_id = c.id
+      WHERE p.status='published' AND p.id != ? AND p.category_id = ?
+      ORDER BY COALESCE(p.published_at, p.created_at) DESC LIMIT ?
+    `).all(postId, categoryId, limit);
+  },
+
   /** Obsidian 볼트로 단방향 저장 */
   syncToObsidian(post) {
     try {
