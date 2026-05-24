@@ -272,7 +272,7 @@ export default function BoardDetail({ params }) {
               <input type="text" defaultValue={board.name} autoFocus
                 onBlur={e => renameBoard(e.target.value)}
                 onKeyDown={e => e.key === "Enter" && renameBoard(e.target.value)}
-                className="text-xl font-bold tracking-tight bg-white dark:bg-slate-900/10 text-white border border-white/30 rounded px-2 py-0.5 focus:outline-none focus:bg-white dark:bg-slate-900/20 placeholder-white/50" />
+                className="text-xl font-bold tracking-tight bg-white/10 text-white border border-white/30 rounded px-2 py-0.5 focus:outline-none focus:bg-white/20 placeholder-white/50" />
             ) : (
               <button onClick={() => isOwner && setEditName(true)}
                 className={`text-xl font-bold tracking-tight text-white truncate ${isOwner ? "hover:text-white/80 cursor-text" : "cursor-default"}`}>
@@ -282,12 +282,12 @@ export default function BoardDetail({ params }) {
           </div>
           <div className="flex items-center gap-2">
             <button onClick={openMembers}
-              className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900/15 hover:bg-white dark:bg-slate-900/25 text-white text-xs font-semibold backdrop-blur border border-white/10 transition-colors flex items-center gap-1.5">
+              className="px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 text-white text-xs font-semibold backdrop-blur border border-white/10 transition-colors flex items-center gap-1.5">
               <span>👥</span> 멤버 · 초대
             </button>
             {isOwner && (
               <button onClick={() => setShowBg(v => !v)}
-                className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900/15 hover:bg-white dark:bg-slate-900/25 text-white text-xs font-semibold backdrop-blur border border-white/10 transition-colors flex items-center gap-1.5">
+                className="px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 text-white text-xs font-semibold backdrop-blur border border-white/10 transition-colors flex items-center gap-1.5">
                 <span>🎨</span> 배경
               </button>
             )}
@@ -553,13 +553,13 @@ function AddList({ onAdd }) {
   if (!adding) {
     return (
       <button onClick={() => setAdding(true)}
-        className="w-72 flex-shrink-0 rounded-2xl bg-white dark:bg-slate-900/15 hover:bg-white dark:bg-slate-900/25 backdrop-blur text-sm text-white py-3 transition-colors border border-white/10 font-medium">
+        className="w-72 flex-shrink-0 rounded-2xl bg-white/15 hover:bg-white/25 backdrop-blur text-sm text-white py-3 transition-colors border border-white/10 font-medium">
         + 다른 리스트 추가
       </button>
     );
   }
   return (
-    <div className="w-72 flex-shrink-0 rounded-2xl bg-white dark:bg-slate-900/95 backdrop-blur shadow-lg p-2">
+    <div className="w-72 flex-shrink-0 rounded-2xl bg-white/95 backdrop-blur shadow-lg p-2">
       <input type="text" value={name} onChange={e => setName(e.target.value)}
         onKeyDown={e => e.key === "Enter" && submit()}
         placeholder="리스트 이름" autoFocus

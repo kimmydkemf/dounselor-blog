@@ -36,7 +36,7 @@ export default function HomePage() {
 
         <div className="relative max-w-5xl mx-auto px-6 py-32 md:py-44 text-center">
           {/* 상단 배지 — "라이브" 신호 */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white dark:bg-slate-900/10 backdrop-blur border border-white/15 mb-8 appear appear-1">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur border border-white/15 mb-8 appear appear-1">
             <span className="relative inline-flex w-2 h-2">
               <span className="absolute inset-0 rounded-full bg-emerald-400 live-dot" />
               <span className="absolute inset-0 rounded-full bg-emerald-400 opacity-50" />
@@ -63,12 +63,12 @@ export default function HomePage() {
 
           <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-3 appear appear-4">
             <Link href="/blog"
-              className="group px-7 py-3.5 rounded-full bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-sm font-semibold hover:bg-white dark:bg-slate-900/95 transition-all shadow-2xl shadow-indigo-900/40 hover:shadow-indigo-700/60 hover:-translate-y-0.5 inline-flex items-center gap-2">
+              className="group px-7 py-3.5 rounded-full bg-white text-slate-900 text-sm font-semibold hover:bg-white/95 transition-all shadow-2xl shadow-indigo-900/40 hover:shadow-indigo-700/60 hover:-translate-y-0.5 inline-flex items-center gap-2">
               블로그 둘러보기
               <span className="group-hover:translate-x-1 transition-transform">→</span>
             </Link>
             <Link href="#topics"
-              className="px-7 py-3.5 rounded-full bg-white dark:bg-slate-900/10 backdrop-blur border border-white/20 text-white text-sm font-semibold hover:bg-white dark:bg-slate-900/20 transition-colors">
+              className="px-7 py-3.5 rounded-full bg-white/10 backdrop-blur border border-white/20 text-white text-sm font-semibold hover:bg-white/20 transition-colors">
               주제 보기
             </Link>
           </div>
