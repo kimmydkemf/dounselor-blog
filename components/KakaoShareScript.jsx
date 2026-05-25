@@ -36,7 +36,7 @@ export default function KakaoShareScript() {
 
   return (
     <Script
-      src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.share.min.js"
+      src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.5/kakao.min.js"
       strategy="afterInteractive"
       onLoad={() => {
         try {
