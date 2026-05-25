@@ -918,22 +918,39 @@ function MembersPanel({ board, invite, isOwner, onClose, onRotate, onRemoveGuest
     catch { prompt("이 링크를 복사해서 보내세요:", url); }
   };
 
-  /**
-   * 공유 — fallback 체인.
-   *   1. Kakao SDK (시크릿/정상 환경)
-   *   2. OS native share (모바일에서 카카오톡 포함 공유 시트)
-   *   3. 자동 링크 복사 + 안내 (Brave/광고 차단기/Tor 등)
-   * 모든 환경에서 작동 보장.
-   */
+  /** 친구에게 보내기 — 무조건 링크 복사부터 (어떤 환경이든 OK).
+   *  추가로 가능하면 카카오톡 모달 / OS 공유 시트도 띄움. */
+  const [shareStatus, setShareStatus] = useState("");
   const shareInvite = async () => {
     if (typeof window === "undefined" || !url) return;
 
-    // (1) Kakao SDK 시도
-    let K = window.Kakao;
-    for (let i = 0; i < 15 && (!K || !K.Share); i++) {
-      await new Promise(r => setTimeout(r, 100));
-      K = window.Kakao;
+    // ── (1) 무조건 링크 복사 — 어떤 환경에서도 확실히 동작 ──
+    let copyOk = false;
+    try {
+      await navigator.clipboard.writeText(url);
+      copyOk = true;
+    } catch {
+      // fallback — execCommand (legacy / iframe)
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = url; ta.style.position = "fixed"; ta.style.opacity = "0";
+        document.body.appendChild(ta); ta.select();
+        copyOk = document.execCommand("copy");
+        document.body.removeChild(ta);
+      } catch {}
     }
+    if (copyOk) {
+      setCopied(true);
+      setShareStatus("✓ 링크 복사 완료 — 카카오톡 친구 채팅에 붙여넣기 해서 보내세요");
+      setTimeout(() => setShareStatus(""), 8000);
+    } else {
+      // clipboard 마저 실패하면 prompt 로 직접 노출
+      prompt("이 링크를 복사해서 보내세요:", url);
+      return;
+    }
+
+    // ── (2) 추가 보너스 — 카카오톡 모달 시도 (가능하면) ──
+    const K = window.Kakao;
     if (K?.Share && K.isInitialized?.()) {
       try {
         K.Share.sendDefault({
@@ -947,35 +964,22 @@ function MembersPanel({ board, invite, isOwner, onClose, onRotate, onRemoveGuest
             { title: "참여하기", link: { mobileWebUrl: url, webUrl: url } },
           ],
         });
+        // 모달 떴으면 그쪽 사용자 결정
         return;
       } catch (e) {
-        console.warn("[Share] Kakao threw, falling back:", e?.message);
+        // 차단됨 — 링크는 이미 복사됐으니 OK
+        console.warn("[Share] Kakao 차단:", e?.message);
       }
     }
 
-    // (2) navigator.share — 모바일에서 OS 공유 시트 (카카오톡 포함)
+    // ── (3) 모바일 navigator.share — 동작하면 추가 옵션 (선택사항이라 await 안 함) ──
     if (navigator.share) {
-      try {
-        await navigator.share({
-          title: `${board.name} — 보드 참여 초대`,
-          text: "함께 일하는 칸반 보드에 초대됐어요. 카카오 계정으로 빠르게 참여하세요.",
-          url,
-        });
-        return;
-      } catch (e) {
-        if (e?.name === "AbortError") return;  // 사용자가 시트 취소
-        console.warn("[Share] native share failed:", e?.message);
-      }
+      navigator.share({
+        title: `${board.name} — 보드 참여 초대`,
+        text: "함께 일하는 칸반 보드에 초대됐어요. 카카오 계정으로 빠르게 참여하세요.",
+        url,
+      }).catch(() => {}); // 사용자 취소나 차단은 그냥 무시
     }
-
-    // (3) 링크 복사 + 안내
-    copy();
-    alert(
-      "초대 링크를 복사했어요!\n\n" +
-      "카카오톡 친구 채팅창에 붙여넣기 (Ctrl+V / 길게 눌러 붙여넣기) 해서 보내주세요.\n\n" +
-      "💡 광고 차단기·보안 브라우저(Brave 등) 환경에서는 카카오톡 공유 창이 막혀\n" +
-      "    이 방법이 가장 확실합니다."
-    );
   };
 
 
@@ -1000,16 +1004,21 @@ function MembersPanel({ board, invite, isOwner, onClose, onRotate, onRemoveGuest
               </div>
               <p className="text-[11px] text-slate-600 dark:text-slate-300 break-all mb-2">{url}</p>
 
-              {/* 친구에게 보내기 — fallback 체인 (Kakao → native → 링크 복사) */}
+              {/* 친구에게 보내기 — 무조건 링크 복사 + 가능하면 카카오톡 모달 */}
               <button onClick={shareInvite}
                 className="w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#FEE500] hover:bg-[#FDD800] text-[#191919] text-sm font-semibold transition-colors shadow-sm mt-2">
                 <svg width="14" height="14" viewBox="0 0 256 256" aria-hidden>
                   <path fill="#191919" d="M128 36C70.56 36 24 72.93 24 118.5c0 29.2 19.3 54.86 48.4 69.46-1.4 5.4-9 31.65-9.4 33.7-.5 2.55 1.3 4.27 3.2 4.27 1.5 0 2.95-.66 4.4-1.55 1.7-1.05 26.6-17.55 36.1-23.85 7 1 14.1 1.45 21.3 1.45 57.44 0 104-36.93 104-82.5S185.44 36 128 36z"/>
                 </svg>
-                친구에게 보내기
+                친구에게 보내기 (링크 복사)
               </button>
+              {shareStatus && (
+                <div className="mt-2 p-2 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 text-xs text-emerald-800 dark:text-emerald-200 leading-relaxed">
+                  {shareStatus}
+                </div>
+              )}
               <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1.5 text-center">
-                카카오톡 → OS 공유 → 링크 복사 자동 폴백
+                링크 복사 자동 + 가능 시 카카오톡 모달
               </p>
 
               {isOwner && (
