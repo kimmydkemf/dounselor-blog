@@ -918,8 +918,8 @@ function MembersPanel({ board, invite, isOwner, onClose, onRotate, onRemoveGuest
     catch { prompt("이 링크를 복사해서 보내세요:", url); }
   };
 
-  /** 친구에게 보내기 — 무조건 링크 복사부터 (어떤 환경이든 OK).
-   *  추가로 가능하면 카카오톡 모달 / OS 공유 시트도 띄움. */
+  /** 친구에게 보내기 — 카카오톡 모달은 환경 의존 너무 심해서 포기.
+   *  대신 깔끔하게: 링크 복사 + 카카오톡 앱 자동 열기. 사용자가 채팅창에 붙여넣기. */
   const [shareStatus, setShareStatus] = useState("");
 
   // 모바일 환경 감지
@@ -963,8 +963,8 @@ function MembersPanel({ board, invite, isOwner, onClose, onRotate, onRemoveGuest
     if (copyOk) {
       setCopied(true);
       setShareStatus(isMobile
-        ? "✓ 링크 복사 + 카카오톡 앱 열기 시도 — 친구 채팅창에 붙여넣기 (길게 눌러)"
-        : "✓ 링크 복사 완료 — 카카오톡 PC 앱이 열리면 채팅창에 Ctrl+V 로 붙여넣기");
+        ? "✓ 링크 복사됨 — 카카오톡 앱이 열리면 친구 채팅창에 길게 눌러 붙여넣기"
+        : "✓ 링크 복사됨 — 카카오톡 PC 앱이 열리면 채팅창에 Ctrl+V 붙여넣기");
       setTimeout(() => setShareStatus(""), 10000);
     } else {
       // clipboard 마저 실패하면 prompt 로 직접 노출
@@ -972,43 +972,18 @@ function MembersPanel({ board, invite, isOwner, onClose, onRotate, onRemoveGuest
       return;
     }
 
-    // ── (2) 추가 보너스 — 카카오톡 모달 시도 (가능하면) ──
-    const K = window.Kakao;
-    if (K?.Share && K.isInitialized?.()) {
-      try {
-        K.Share.sendDefault({
-          objectType: "feed",
-          content: {
-            title: `📋 ${board.name} — 보드 참여 초대`,
-            description: `함께 일하는 칸반 보드에 초대됐어요.\n카카오 계정으로 빠르게 참여해보세요.`,
-            link: { mobileWebUrl: url, webUrl: url },
-          },
-          buttons: [
-            { title: "참여하기", link: { mobileWebUrl: url, webUrl: url } },
-          ],
-        });
-        // 모달 떴으면 그쪽 사용자 결정
-        return;
-      } catch (e) {
-        // 차단됨 — 링크는 이미 복사됐으니 OK
-        console.warn("[Share] Kakao 차단:", e?.message);
-      }
-    }
-
-    // ── (3) 카카오톡 앱 직접 열기 시도 ──
-    // SDK 차단된 환경에서도 카카오톡 앱(PC/모바일) 이 설치돼 있으면 그냥 앱 자체를 엶.
-    // 메시지 미리 입력은 카카오 정책상 안 되지만, 이미 링크 복사됐으니 사용자가 붙여넣기.
-    // 보드 → 앱 열기 → 채팅창에서 Ctrl+V 또는 길게 눌러 붙여넣기 — 한 호흡에 끝.
+    // ── (2) 카카오톡 앱 직접 열기 — 환경 무관 안정적 ──
+    // iframe 으로 'kakaotalk://' 스킴 호출. 앱 설치돼 있으면 OS 가 자동으로 앱 엶.
+    // 모달 X / 친구선택 X — 그냥 카톡 앱 자체. 사용자가 채팅창 열고 길게 눌러/Ctrl+V.
     setTimeout(() => {
       try {
-        // iframe 으로 시도 — window.location 직접 변경 시 사이트 이탈 느낌 강함
         const iframe = document.createElement("iframe");
         iframe.style.display = "none";
         iframe.src = "kakaotalk://";
         document.body.appendChild(iframe);
         setTimeout(() => iframe.remove(), 1000);
       } catch {}
-    }, 600);
+    }, 400);
   };
 
 
@@ -1039,7 +1014,7 @@ function MembersPanel({ board, invite, isOwner, onClose, onRotate, onRemoveGuest
                 <svg width="14" height="14" viewBox="0 0 256 256" aria-hidden>
                   <path fill="#191919" d="M128 36C70.56 36 24 72.93 24 118.5c0 29.2 19.3 54.86 48.4 69.46-1.4 5.4-9 31.65-9.4 33.7-.5 2.55 1.3 4.27 3.2 4.27 1.5 0 2.95-.66 4.4-1.55 1.7-1.05 26.6-17.55 36.1-23.85 7 1 14.1 1.45 21.3 1.45 57.44 0 104-36.93 104-82.5S185.44 36 128 36z"/>
                 </svg>
-                {isMobile ? "카카오톡으로 보내기" : "링크 복사 + 카카오톡 모달"}
+                카카오톡으로 보내기
               </button>
               {shareStatus && (
                 <div className="mt-2 p-2 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 text-xs text-emerald-800 dark:text-emerald-200 leading-relaxed">
