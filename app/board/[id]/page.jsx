@@ -943,12 +943,14 @@ function MembersPanel({ board, invite, isOwner, onClose, onRotate, onRemoveGuest
     }
     try {
       // Kakao SDK v2 의 sendDefault — fail/success callback 옵션 없음 (v1 식 시그니처라 throw).
+      // 카카오 서버가 imageUrl 을 직접 fetch 해 검증. 일부 환경(CF bot challenge / 도메인 검증 안 됨)에서
+      // 실패하면 sharer 페이지에 에러 표시. imageUrl 은 옵션이라 빼고 검증.
+      // 정상 동작 확인 후 imageUrl 다시 추가하면서 그때 카카오의 검증 정책 살피기.
       K.Share.sendDefault({
         objectType: "feed",
         content: {
           title: `📋 ${board.name} — 보드 참여 초대`,
           description: `함께 일하는 칸반 보드에 초대됐어요.\n카카오 계정으로 빠르게 참여해보세요.`,
-          imageUrl: `${window.location.origin}/icon-512.png`,
           link: { mobileWebUrl: url, webUrl: url },
         },
         buttons: [
