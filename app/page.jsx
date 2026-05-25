@@ -46,7 +46,7 @@ export default function HomePage() {
             </span>
           </div>
 
-          <h1 className="text-5xl md:text-[5.5rem] font-bold tracking-tight text-white leading-[0.98] appear appear-2">
+          <h1 className="text-4xl sm:text-5xl md:text-[5.5rem] font-bold tracking-tight text-white leading-[0.98] appear appear-2">
             기록은 곧
             <br />
             <span className="relative inline-block">

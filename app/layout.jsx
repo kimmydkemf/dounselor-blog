@@ -89,8 +89,8 @@ function Nav({ isOwner }) {
   return (
     <nav className="sticky top-0 z-40 bg-white/70 dark:bg-slate-950/70 backdrop-blur-2xl border-b border-slate-200/60 dark:border-slate-800/60">
       <div className="h-px bg-gradient-to-r from-transparent via-indigo-400/60 to-transparent" />
-      <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
-        <Link href="/" className="group flex items-center gap-2 -ml-1 px-2 py-1 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
+      <div className="max-w-6xl mx-auto px-3 md:px-6 h-14 flex items-center justify-between gap-2">
+        <Link href="/" className="group flex items-center gap-2 -ml-1 px-2 py-1 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors flex-shrink-0">
           <span className="relative w-7 h-7 rounded-lg overflow-hidden shadow-sm ring-1 ring-slate-900/5 dark:ring-white/10">
             <img src="/icon.svg" alt="" className="w-full h-full" />
           </span>
@@ -99,14 +99,14 @@ function Nav({ isOwner }) {
           </span>
         </Link>
 
-        <div className="flex items-center gap-0.5">
+        <div className="flex items-center gap-0.5 min-w-0">
           <NavLink href="/blog">블로그</NavLink>
           {isOwner && (
             <>
               <NavLink href="/memories">추억집</NavLink>
               <NavLink href="/board">보드</NavLink>
-              <div className="w-px h-5 bg-slate-200 dark:bg-slate-700 mx-2" />
-              <form action="/api/auth/logout" method="post">
+              <div className="hidden sm:block w-px h-5 bg-slate-200 dark:bg-slate-700 mx-2" />
+              <form action="/api/auth/logout" method="post" className="hidden sm:block">
                 <button type="submit"
                   className="px-3 py-1.5 rounded-lg text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                   로그아웃
@@ -126,7 +126,7 @@ function Nav({ isOwner }) {
 function NavLink({ href, children }) {
   return (
     <Link href={href}
-      className="relative px-3 py-1.5 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+      className="relative px-2.5 md:px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap">
       {children}
     </Link>
   );
