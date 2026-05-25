@@ -921,6 +921,27 @@ function MembersPanel({ board, invite, isOwner, onClose, onRotate, onRemoveGuest
   /** 친구에게 보내기 — 무조건 링크 복사부터 (어떤 환경이든 OK).
    *  추가로 가능하면 카카오톡 모달 / OS 공유 시트도 띄움. */
   const [shareStatus, setShareStatus] = useState("");
+
+  // 모바일 환경 감지
+  const isMobile = typeof navigator !== "undefined" &&
+    /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  const shareText = `📋 ${board?.name || "보드"} 참여 초대\n함께 일하는 칸반 보드에 초대됐어요.\n${url}`;
+
+  /** 메신저 deep link 들 — 모든 환경에서 OS 가 처리 */
+  const shareVia = (target) => {
+    if (!url) return;
+    const enc = encodeURIComponent;
+    const links = {
+      sms:      `sms:?body=${enc(shareText)}`,
+      mail:     `mailto:?subject=${enc(`${board.name} 보드 참여 초대`)}&body=${enc(shareText)}`,
+      telegram: `https://t.me/share/url?url=${enc(url)}&text=${enc(`${board.name} 보드 참여 초대`)}`,
+      whatsapp: `https://wa.me/?text=${enc(shareText)}`,
+    };
+    const u = links[target];
+    if (u) window.open(u, "_blank");
+  };
+
   const shareInvite = async () => {
     if (typeof window === "undefined" || !url) return;
 
@@ -972,13 +993,16 @@ function MembersPanel({ board, invite, isOwner, onClose, onRotate, onRemoveGuest
       }
     }
 
-    // ── (3) 모바일 navigator.share — 동작하면 추가 옵션 (선택사항이라 await 안 함) ──
-    if (navigator.share) {
-      navigator.share({
-        title: `${board.name} — 보드 참여 초대`,
-        text: "함께 일하는 칸반 보드에 초대됐어요. 카카오 계정으로 빠르게 참여하세요.",
-        url,
-      }).catch(() => {}); // 사용자 취소나 차단은 그냥 무시
+    // ── (3) 모바일이면 카카오톡 앱 직접 호출 시도 ──
+    // SDK 의 sharer 가 차단된 환경에서도 모바일 카카오톡 앱이 깔려있으면 deep link 로 직접 열림.
+    if (isMobile) {
+      // 우선순위 1: 카카오 web share (모바일 카카오톡 앱이 받음)
+      // window.location.href 변경 — 차단되면 그냥 무시 (이미 링크는 복사됨)
+      setTimeout(() => {
+        try {
+          window.location.href = `kakaotalk://web/openExternal?url=${encodeURIComponent(url)}`;
+        } catch {}
+      }, 300);
     }
   };
 
@@ -1004,22 +1028,48 @@ function MembersPanel({ board, invite, isOwner, onClose, onRotate, onRemoveGuest
               </div>
               <p className="text-[11px] text-slate-600 dark:text-slate-300 break-all mb-2">{url}</p>
 
-              {/* 친구에게 보내기 — 무조건 링크 복사 + 가능하면 카카오톡 모달 */}
+              {/* 친구에게 보내기 — 큰 버튼: 링크 복사 + 가능하면 카카오톡 모달 */}
               <button onClick={shareInvite}
                 className="w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#FEE500] hover:bg-[#FDD800] text-[#191919] text-sm font-semibold transition-colors shadow-sm mt-2">
                 <svg width="14" height="14" viewBox="0 0 256 256" aria-hidden>
                   <path fill="#191919" d="M128 36C70.56 36 24 72.93 24 118.5c0 29.2 19.3 54.86 48.4 69.46-1.4 5.4-9 31.65-9.4 33.7-.5 2.55 1.3 4.27 3.2 4.27 1.5 0 2.95-.66 4.4-1.55 1.7-1.05 26.6-17.55 36.1-23.85 7 1 14.1 1.45 21.3 1.45 57.44 0 104-36.93 104-82.5S185.44 36 128 36z"/>
                 </svg>
-                친구에게 보내기 (링크 복사)
+                {isMobile ? "카카오톡으로 보내기" : "링크 복사 + 카카오톡 모달"}
               </button>
               {shareStatus && (
                 <div className="mt-2 p-2 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 text-xs text-emerald-800 dark:text-emerald-200 leading-relaxed">
                   {shareStatus}
                 </div>
               )}
-              <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1.5 text-center">
-                링크 복사 자동 + 가능 시 카카오톡 모달
-              </p>
+
+              {/* 다른 메신저 옵션 — 카카오톡 차단 시 안전 fallback */}
+              <div className="mt-2.5">
+                <p className="text-[10px] text-slate-400 dark:text-slate-500 mb-1.5 text-center">또는 다른 앱으로</p>
+                <div className="flex items-center justify-center gap-1.5">
+                  {isMobile && (
+                    <button onClick={() => shareVia("sms")}
+                      title="SMS 로 보내기"
+                      className="w-9 h-9 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-colors flex items-center justify-center text-base">
+                      💬
+                    </button>
+                  )}
+                  <button onClick={() => shareVia("telegram")}
+                    title="텔레그램 으로 보내기"
+                    className="w-9 h-9 rounded-lg bg-[#0088cc]/10 hover:bg-[#0088cc]/20 text-[#0088cc] transition-colors flex items-center justify-center">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.643.135-.953l11.566-4.458c.538-.196 1.006.128.832.941z"/></svg>
+                  </button>
+                  <button onClick={() => shareVia("whatsapp")}
+                    title="WhatsApp 으로 보내기"
+                    className="w-9 h-9 rounded-lg bg-[#25d366]/10 hover:bg-[#25d366]/20 text-[#25d366] transition-colors flex items-center justify-center">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413"/></svg>
+                  </button>
+                  <button onClick={() => shareVia("mail")}
+                    title="이메일 로 보내기"
+                    className="w-9 h-9 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-colors flex items-center justify-center text-base">
+                    ✉️
+                  </button>
+                </div>
+              </div>
 
               {isOwner && (
                 <button onClick={onRotate}
