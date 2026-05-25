@@ -972,18 +972,30 @@ function MembersPanel({ board, invite, isOwner, onClose, onRotate, onRemoveGuest
       return;
     }
 
-    // ── (2) 카카오톡 앱 직접 열기 — 환경 무관 안정적 ──
-    // iframe 으로 'kakaotalk://' 스킴 호출. 앱 설치돼 있으면 OS 가 자동으로 앱 엶.
-    // 모달 X / 친구선택 X — 그냥 카톡 앱 자체. 사용자가 채팅창 열고 길게 눌러/Ctrl+V.
-    setTimeout(() => {
-      try {
+    // ── (2) 카카오톡 앱 직접 열기 — OS 별로 다른 호출 방식 ──
+    // 사용자 gesture 컨텍스트에서 즉시 호출 (setTimeout 빼면 더 잘 동작).
+    const ua = navigator.userAgent;
+    const isIOS = /iPad|iPhone|iPod/.test(ua);
+    const isAndroid = /Android/.test(ua);
+
+    try {
+      if (isIOS) {
+        // iOS Safari/Chrome — 직접 location 변경. 앱 설치 X 면 아무 일도 안 일어남.
+        window.location.href = "kakaotalk://";
+      } else if (isAndroid) {
+        // Android Chrome — intent URL 이 가장 안정적.
+        window.location.href = "intent://#Intent;package=com.kakao.talk;scheme=kakaotalk;end";
+      } else {
+        // PC — iframe 으로 (페이지 이탈 방지)
         const iframe = document.createElement("iframe");
         iframe.style.display = "none";
         iframe.src = "kakaotalk://";
         document.body.appendChild(iframe);
         setTimeout(() => iframe.remove(), 1000);
-      } catch {}
-    }, 400);
+      }
+    } catch (e) {
+      console.warn("[Share] kakaotalk launch failed:", e?.message);
+    }
   };
 
 
