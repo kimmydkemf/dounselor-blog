@@ -953,9 +953,17 @@ function MembersPanel({ board, invite, isOwner, onClose, onRotate, onRemoveGuest
         buttons: [
           { title: "참여하기", link: { mobileWebUrl: url, webUrl: url } },
         ],
+        // 카카오 SDK 가 에러 객체 자세히 던지도록 fail callback
+        fail: (err) => {
+          const detail = JSON.stringify(err, null, 2);
+          console.error("[KakaoShare] sendDefault fail:", err);
+          alert(`카카오 공유 실패\n\n${detail}\n\n자세한 내용은 F12 콘솔 확인.`);
+        },
       });
     } catch (e) {
-      alert("카카오 공유 실패: " + e.message);
+      console.error("[KakaoShare] sendDefault threw:", e);
+      const detail = (e && typeof e === "object") ? JSON.stringify(e, Object.getOwnPropertyNames(e)) : String(e);
+      alert(`카카오 공유 throw\n\n${detail}`);
     }
   };
 
