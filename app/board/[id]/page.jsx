@@ -962,8 +962,10 @@ function MembersPanel({ board, invite, isOwner, onClose, onRotate, onRemoveGuest
     }
     if (copyOk) {
       setCopied(true);
-      setShareStatus("✓ 링크 복사 완료 — 카카오톡 친구 채팅에 붙여넣기 해서 보내세요");
-      setTimeout(() => setShareStatus(""), 8000);
+      setShareStatus(isMobile
+        ? "✓ 링크 복사 + 카카오톡 앱 열기 시도 — 친구 채팅창에 붙여넣기 (길게 눌러)"
+        : "✓ 링크 복사 완료 — 카카오톡 PC 앱이 열리면 채팅창에 Ctrl+V 로 붙여넣기");
+      setTimeout(() => setShareStatus(""), 10000);
     } else {
       // clipboard 마저 실패하면 prompt 로 직접 노출
       prompt("이 링크를 복사해서 보내세요:", url);
@@ -993,17 +995,20 @@ function MembersPanel({ board, invite, isOwner, onClose, onRotate, onRemoveGuest
       }
     }
 
-    // ── (3) 모바일이면 카카오톡 앱 직접 호출 시도 ──
-    // SDK 의 sharer 가 차단된 환경에서도 모바일 카카오톡 앱이 깔려있으면 deep link 로 직접 열림.
-    if (isMobile) {
-      // 우선순위 1: 카카오 web share (모바일 카카오톡 앱이 받음)
-      // window.location.href 변경 — 차단되면 그냥 무시 (이미 링크는 복사됨)
-      setTimeout(() => {
-        try {
-          window.location.href = `kakaotalk://web/openExternal?url=${encodeURIComponent(url)}`;
-        } catch {}
-      }, 300);
-    }
+    // ── (3) 카카오톡 앱 직접 열기 시도 ──
+    // SDK 차단된 환경에서도 카카오톡 앱(PC/모바일) 이 설치돼 있으면 그냥 앱 자체를 엶.
+    // 메시지 미리 입력은 카카오 정책상 안 되지만, 이미 링크 복사됐으니 사용자가 붙여넣기.
+    // 보드 → 앱 열기 → 채팅창에서 Ctrl+V 또는 길게 눌러 붙여넣기 — 한 호흡에 끝.
+    setTimeout(() => {
+      try {
+        // iframe 으로 시도 — window.location 직접 변경 시 사이트 이탈 느낌 강함
+        const iframe = document.createElement("iframe");
+        iframe.style.display = "none";
+        iframe.src = "kakaotalk://";
+        document.body.appendChild(iframe);
+        setTimeout(() => iframe.remove(), 1000);
+      } catch {}
+    }, 600);
   };
 
 
