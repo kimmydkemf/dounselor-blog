@@ -918,66 +918,66 @@ function MembersPanel({ board, invite, isOwner, onClose, onRotate, onRemoveGuest
     catch { prompt("이 링크를 복사해서 보내세요:", url); }
   };
 
-  /** 카카오톡 공유 — Kakao JS SDK 가 로드되길 잠깐 대기 후 실행 */
-  const shareKakao = async () => {
-    if (typeof window === "undefined") return;
-    // SDK 가 아직 로드 중이면 최대 3초 대기
+  /**
+   * 공유 — fallback 체인.
+   *   1. Kakao SDK (시크릿/정상 환경)
+   *   2. OS native share (모바일에서 카카오톡 포함 공유 시트)
+   *   3. 자동 링크 복사 + 안내 (Brave/광고 차단기/Tor 등)
+   * 모든 환경에서 작동 보장.
+   */
+  const shareInvite = async () => {
+    if (typeof window === "undefined" || !url) return;
+
+    // (1) Kakao SDK 시도
     let K = window.Kakao;
-    for (let i = 0; i < 30 && (!K || !K.Share); i++) {
+    for (let i = 0; i < 15 && (!K || !K.Share); i++) {
       await new Promise(r => setTimeout(r, 100));
       K = window.Kakao;
     }
-    if (!K?.Share) {
-      // 진단 정보 같이
-      const env = process.env.NEXT_PUBLIC_KAKAO_JS_KEY ? "키 OK" : "키 없음";
-      const sdk = window.Kakao ? `Kakao 객체 있음(init=${window.Kakao.isInitialized?.()})` : "Kakao 객체 없음";
-      alert(`카카오 SDK 로드 실패\n• ${env}\n• ${sdk}\n\n브라우저 콘솔(F12) 에서 차단 메시지 확인해주세요.`);
-      console.error("[KakaoShare] SDK unavailable", { K, env, sdk });
-      // 폴백 — 링크 복사
-      copy();
-      return;
+    if (K?.Share && K.isInitialized?.()) {
+      try {
+        K.Share.sendDefault({
+          objectType: "feed",
+          content: {
+            title: `📋 ${board.name} — 보드 참여 초대`,
+            description: `함께 일하는 칸반 보드에 초대됐어요.\n카카오 계정으로 빠르게 참여해보세요.`,
+            link: { mobileWebUrl: url, webUrl: url },
+          },
+          buttons: [
+            { title: "참여하기", link: { mobileWebUrl: url, webUrl: url } },
+          ],
+        });
+        return;
+      } catch (e) {
+        console.warn("[Share] Kakao threw, falling back:", e?.message);
+      }
     }
-    if (!K.isInitialized()) {
-      try { K.init(process.env.NEXT_PUBLIC_KAKAO_JS_KEY); }
-      catch (e) { console.error("[KakaoShare] init fallback:", e); }
-    }
-    try {
-      // Kakao SDK v2 의 sendDefault — fail/success callback 옵션 없음 (v1 식 시그니처라 throw).
-      // 카카오 서버가 imageUrl 을 직접 fetch 해 검증. 일부 환경(CF bot challenge / 도메인 검증 안 됨)에서
-      // 실패하면 sharer 페이지에 에러 표시. imageUrl 은 옵션이라 빼고 검증.
-      // 정상 동작 확인 후 imageUrl 다시 추가하면서 그때 카카오의 검증 정책 살피기.
-      K.Share.sendDefault({
-        objectType: "feed",
-        content: {
-          title: `📋 ${board.name} — 보드 참여 초대`,
-          description: `함께 일하는 칸반 보드에 초대됐어요.\n카카오 계정으로 빠르게 참여해보세요.`,
-          link: { mobileWebUrl: url, webUrl: url },
-        },
-        buttons: [
-          { title: "참여하기", link: { mobileWebUrl: url, webUrl: url } },
-        ],
-      });
-    } catch (e) {
-      console.error("[KakaoShare] sendDefault threw:", e);
-      const detail = (e && typeof e === "object") ? JSON.stringify(e, Object.getOwnPropertyNames(e)) : String(e);
-      alert(`카카오 공유 실패\n\n${detail}`);
-    }
-  };
 
-  // 모바일 네이티브 share (PC 에선 폴백 안 동작)
-  const shareNative = async () => {
-    if (typeof navigator !== "undefined" && navigator.share) {
+    // (2) navigator.share — 모바일에서 OS 공유 시트 (카카오톡 포함)
+    if (navigator.share) {
       try {
         await navigator.share({
           title: `${board.name} — 보드 참여 초대`,
           text: "함께 일하는 칸반 보드에 초대됐어요. 카카오 계정으로 빠르게 참여하세요.",
           url,
         });
-      } catch {}
-    } else {
-      copy();
+        return;
+      } catch (e) {
+        if (e?.name === "AbortError") return;  // 사용자가 시트 취소
+        console.warn("[Share] native share failed:", e?.message);
+      }
     }
+
+    // (3) 링크 복사 + 안내
+    copy();
+    alert(
+      "초대 링크를 복사했어요!\n\n" +
+      "카카오톡 친구 채팅창에 붙여넣기 (Ctrl+V / 길게 눌러 붙여넣기) 해서 보내주세요.\n\n" +
+      "💡 광고 차단기·보안 브라우저(Brave 등) 환경에서는 카카오톡 공유 창이 막혀\n" +
+      "    이 방법이 가장 확실합니다."
+    );
   };
+
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-start justify-end p-4"
@@ -1000,22 +1000,17 @@ function MembersPanel({ board, invite, isOwner, onClose, onRotate, onRemoveGuest
               </div>
               <p className="text-[11px] text-slate-600 dark:text-slate-300 break-all mb-2">{url}</p>
 
-              {/* 공유 버튼들 */}
-              <div className="flex gap-1.5 flex-wrap mt-2">
-                <button onClick={shareKakao}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FEE500] hover:bg-[#FDD800] text-[#191919] text-xs font-semibold transition-colors shadow-sm">
-                  <svg width="12" height="12" viewBox="0 0 256 256" aria-hidden>
-                    <path fill="#191919" d="M128 36C70.56 36 24 72.93 24 118.5c0 29.2 19.3 54.86 48.4 69.46-1.4 5.4-9 31.65-9.4 33.7-.5 2.55 1.3 4.27 3.2 4.27 1.5 0 2.95-.66 4.4-1.55 1.7-1.05 26.6-17.55 36.1-23.85 7 1 14.1 1.45 21.3 1.45 57.44 0 104-36.93 104-82.5S185.44 36 128 36z"/>
-                  </svg>
-                  카카오톡으로 보내기
-                </button>
-                {typeof navigator !== "undefined" && navigator.share && (
-                  <button onClick={shareNative}
-                    className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold transition-colors">
-                    📤 다른 앱
-                  </button>
-                )}
-              </div>
+              {/* 친구에게 보내기 — fallback 체인 (Kakao → native → 링크 복사) */}
+              <button onClick={shareInvite}
+                className="w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#FEE500] hover:bg-[#FDD800] text-[#191919] text-sm font-semibold transition-colors shadow-sm mt-2">
+                <svg width="14" height="14" viewBox="0 0 256 256" aria-hidden>
+                  <path fill="#191919" d="M128 36C70.56 36 24 72.93 24 118.5c0 29.2 19.3 54.86 48.4 69.46-1.4 5.4-9 31.65-9.4 33.7-.5 2.55 1.3 4.27 3.2 4.27 1.5 0 2.95-.66 4.4-1.55 1.7-1.05 26.6-17.55 36.1-23.85 7 1 14.1 1.45 21.3 1.45 57.44 0 104-36.93 104-82.5S185.44 36 128 36z"/>
+                </svg>
+                친구에게 보내기
+              </button>
+              <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1.5 text-center">
+                카카오톡 → OS 공유 → 링크 복사 자동 폴백
+              </p>
 
               {isOwner && (
                 <button onClick={onRotate}
