@@ -918,13 +918,28 @@ function MembersPanel({ board, invite, isOwner, onClose, onRotate, onRemoveGuest
     catch { prompt("이 링크를 복사해서 보내세요:", url); }
   };
 
-  /** 카카오톡 공유 — Kakao JS SDK 가 로드돼있어야 동작 */
-  const shareKakao = () => {
+  /** 카카오톡 공유 — Kakao JS SDK 가 로드되길 잠깐 대기 후 실행 */
+  const shareKakao = async () => {
     if (typeof window === "undefined") return;
-    const K = window.Kakao;
+    // SDK 가 아직 로드 중이면 최대 3초 대기
+    let K = window.Kakao;
+    for (let i = 0; i < 30 && (!K || !K.Share); i++) {
+      await new Promise(r => setTimeout(r, 100));
+      K = window.Kakao;
+    }
     if (!K?.Share) {
-      alert("카카오 공유 SDK 가 로드되지 않았습니다.\n환경변수 NEXT_PUBLIC_KAKAO_JS_KEY 설정 후 재시작해주세요.");
+      // 진단 정보 같이
+      const env = process.env.NEXT_PUBLIC_KAKAO_JS_KEY ? "키 OK" : "키 없음";
+      const sdk = window.Kakao ? `Kakao 객체 있음(init=${window.Kakao.isInitialized?.()})` : "Kakao 객체 없음";
+      alert(`카카오 SDK 로드 실패\n• ${env}\n• ${sdk}\n\n브라우저 콘솔(F12) 에서 차단 메시지 확인해주세요.`);
+      console.error("[KakaoShare] SDK unavailable", { K, env, sdk });
+      // 폴백 — 링크 복사
+      copy();
       return;
+    }
+    if (!K.isInitialized()) {
+      try { K.init(process.env.NEXT_PUBLIC_KAKAO_JS_KEY); }
+      catch (e) { console.error("[KakaoShare] init fallback:", e); }
     }
     try {
       K.Share.sendDefault({
