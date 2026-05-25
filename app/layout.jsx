@@ -17,6 +17,10 @@ export const metadata = {
   manifest: "/manifest.json",
   themeColor: "#4f46e5",
   appleWebApp: { capable: true, statusBarStyle: "default", title: "Dounselor" },
+  other: {
+    // apple-mobile-web-app-capable 가 deprecated 라고 Chrome 경고 → 표준 mobile-web-app-capable 도 같이
+    "mobile-web-app-capable": "yes",
+  },
   icons: {
     icon: [
       { url: "/favicon-16.png", sizes: "16x16", type: "image/png" },
