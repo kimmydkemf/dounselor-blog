@@ -69,6 +69,8 @@ export default function RootLayout({ children }) {
     <html lang="ko" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+        {/* Kakao SDK — 서비스 워커/lazy 로딩 무관하게 SSR HTML 에 직접 포함 */}
+        <script src="/kakao.min.js" async></script>
       </head>
       <body className="bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen antialiased overflow-x-hidden transition-colors duration-200">
         <VisitorPing />
